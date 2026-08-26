@@ -1,1 +1,1569 @@
+/* ========================================================= */
+/* BASIC VARIABLES                                           */
+/* ========================================================= */
 
+/* These variables control the main colors of the website. */
+:root {
+
+    /* Main page background. */
+    --paper: #F5F6F2;
+
+    /* Main text color. */
+    --ink: #00273a;
+
+    /* Secondary text color. */
+    --ink-soft: #5B645F;
+
+    /* Main blue color. */
+    --indigo: #00689b;
+
+    /* Course button has its own color. */
+    --course-button: #00689b;
+
+    /* Border color. */
+    --line: #DCDFD6;
+
+    /* Card background. */
+    --card: #FFFFFF;
+
+    /* Error color. */
+    --danger: #C94C4C;
+
+    /* White color. */
+    --white: #FFFFFF;
+}
+
+
+/* ========================================================= */
+/* DARK MODE VARIABLES                                       */
+/* ========================================================= */
+
+/* These colors are used when dark mode is active. */
+body.dark {
+
+    /* Dark page background. */
+    --paper: #15181C;
+
+    /* Light text. */
+    --ink: #E8EAE4;
+
+    /* Soft light text. */
+    --ink-soft: #9AA39B;
+
+    /* Dark card. */
+    --card: #1E2227;
+
+    /* Dark border. */
+    --line: #33383B;
+
+    /* Blue remains blue. */
+    --indigo: #00689b;
+
+    /* Course button in dark mode. */
+    --course-button: #0088C7;
+
+    /* Error color. */
+    --danger: #E2897A;
+}
+
+
+/* ========================================================= */
+/* GLOBAL RESET                                              */
+/* ========================================================= */
+
+/* This removes default spacing from all elements. */
+* {
+    box-sizing: border-box;
+}
+
+
+/* This controls the whole page. */
+body {
+
+    /* Remove default browser margin. */
+    margin: 0;
+
+    /* Use Tajawal everywhere. */
+    font-family: "Tajawal", sans-serif;
+
+    /* Set the page background. */
+    background: var(--paper);
+
+    /* Set the main text color. */
+    color: var(--ink);
+
+    /* Smooth color changes. */
+    transition:
+        background 0.25s ease,
+        color 0.25s ease;
+}
+
+
+/* Hide an element completely. */
+.hidden {
+    display: none !important;
+}
+
+
+ /* ========================================================= */
+ /* TOP HEADER                                                */
+ /* ========================================================= */
+
+.top-header {
+    position: fixed;
+
+    top: 0;
+    right: 0;
+    left: 0;
+
+    width: 100%;
+    min-height: 75px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 12px 35px;
+
+    background: var(--card);
+
+    border-bottom: 1px solid var(--line);
+
+    box-shadow:
+        0 4px 20px rgba(0, 39, 58, 0.06);
+
+    z-index: 1000;
+}
+
+
+/* ========================================================= */
+/* BRAND                                                     */
+/* ========================================================= */
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+
+.brand-logo {
+    width: 42px;
+    height: 42px;
+
+    object-fit: contain;
+
+    flex-shrink: 0;
+}
+
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+
+.brand-text strong {
+    font-size: 15px;
+    font-weight: 900;
+}
+
+
+.brand-text span {
+    font-size: 11px;
+    margin-left: 8%;
+    text-align: center;
+    color: var(--ink-soft);
+}
+
+
+/* ========================================================= */
+/* LEFT SIDE BUTTONS                                         */
+/* ========================================================= */
+
+/*
+   Because the website uses dir="rtl",
+   this container is placed on the left side.
+*/
+.theme-buttons {
+    position: absolute;
+
+    left: 35px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    direction: ltr;
+}
+
+
+/* ========================================================= */
+/* COURSE FILE BUTTON                                        */
+/* ========================================================= */
+
+/*
+   Course file button has exactly the same visual style
+   as the moon button.
+*/
+.course-file-btn {
+    width: auto;
+    min-height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 14px;
+
+    border: 1px solid var(--line);
+
+    border-radius: 10px;
+
+    background: var(--card);
+
+    color: var(--ink);
+
+    text-decoration: none;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+
+/* Course file hover. */
+.course-file-btn:hover {
+    border-color: var(--indigo);
+
+    background: var(--paper);
+
+    transform: translateY(-2px);
+}
+
+
+/* ========================================================= */
+/* THEME BUTTON                                              */
+/* ========================================================= */
+
+.theme-btn {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--line);
+
+    border-radius: 10px;
+
+    background: var(--card);
+
+    color: var(--ink);
+
+    cursor: pointer;
+
+    font-size: 17px;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+
+/* Theme button hover. */
+.theme-btn:hover {
+    border-color: var(--indigo);
+
+    background: var(--paper);
+
+    transform: translateY(-2px);
+}
+
+
+/* ========================================================= */
+/* SPACE FOR FIXED HEADER                                    */
+/* ========================================================= */
+
+body {
+    padding-top: 75px;
+}
+
+
+/* ========================================================= */
+/* MOBILE HEADER                                             */
+/* ========================================================= */
+
+@media (max-width: 550px) {
+
+    .top-header {
+        min-height: 68px;
+
+        padding: 10px 15px;
+    }
+
+
+    body {
+        padding-top: 68px;
+    }
+
+
+    .brand {
+        gap: 9px;
+    }
+
+
+    .brand-logo {
+        width: 38px;
+        height: 38px;
+    }
+
+
+    .brand-text strong {
+        font-size: 14px;
+    }
+
+
+    .brand-text span {
+        font-size: 10px;
+    }
+
+
+    .theme-buttons {
+        gap: 6px;
+    }
+
+
+    .course-file-btn {
+        min-height: 36px;
+
+        padding: 0 11px;
+
+        font-size: 11px;
+
+        border-radius: 9px;
+    }
+
+
+    .theme-btn {
+        width: 36px;
+        height: 36px;
+
+        font-size: 16px;
+
+        border-radius: 9px;
+    }
+}
+
+
+/* ========================================================= */
+/* ACCESS SCREEN                                             */
+/* ========================================================= */
+
+/* Full login screen. */
+.access-screen {
+
+    /* Minimum height of screen. */
+    min-height: calc(100vh - 75px);
+
+    /* Center the box. */
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    /* Padding for mobile. */
+    padding: 30px;
+}
+
+
+/* Login box. */
+.access-box {
+
+    /* Maximum width. */
+    width: 100%;
+    max-width: 430px;
+
+    /* Background. */
+    background: var(--card);
+
+    /* Border. */
+    border: 1px solid var(--line);
+
+    /* Rounded corners. */
+    border-radius: 24px;
+
+    /* Inside spacing. */
+    padding: 40px;
+
+    /* Center text. */
+    text-align: center;
+
+    /* Shadow. */
+    box-shadow:
+        0 20px 60px rgba(0, 39, 58, 0.08);
+}
+
+
+/* Login logo. */
+.access-logo {
+
+    /* Logo size. */
+    width: 65px;
+    height: 65px;
+
+    /* Center horizontally. */
+    margin: 0 auto 18px;
+
+    /* Blue background. */
+    background: var(--indigo);
+
+    /* White text. */
+    color: white;
+
+    /* Round. */
+    border-radius: 18px;
+
+    /* Center letters. */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Font. */
+    font-size: 20px;
+    font-weight: 900;
+}
+
+
+/* Login title. */
+.access-box h1 {
+
+    margin: 0;
+
+    font-size: 26px;
+
+    font-weight: 900;
+}
+
+
+/* Course title. */
+.access-box h2 {
+
+    margin: 5px 0 15px;
+
+    font-size: 15px;
+
+    color: var(--indigo);
+
+    font-weight: 800;
+}
+
+
+/* Login description. */
+.access-description {
+
+    color: var(--ink-soft);
+
+    line-height: 1.8;
+
+    font-size: 14px;
+
+    margin-bottom: 25px;
+}
+
+
+/* Password input. */
+.password-input {
+
+    /* Full width. */
+    width: 100%;
+
+    /* Input height. */
+    padding: 15px;
+
+    /* Border. */
+    border: 1px solid var(--line);
+
+    /* Rounded corners. */
+    border-radius: 12px;
+
+    /* Background. */
+    background: var(--paper);
+
+    /* Text color. */
+    color: var(--ink);
+
+    /* Center the password. */
+    text-align: center;
+
+    /* Letter spacing. */
+    letter-spacing: 8px;
+
+    /* Font. */
+    font-size: 22px;
+
+    /* Remove outline. */
+    outline: none;
+}
+
+
+/* Password focus. */
+.password-input:focus {
+
+    /* Blue border. */
+    border-color: var(--indigo);
+}
+
+
+/* Consent area. */
+.consent-label {
+
+    /* Put checkbox and text beside each other. */
+    display: flex;
+
+    /* Align top. */
+    align-items: flex-start;
+
+    /* Gap. */
+    gap: 10px;
+
+    /* Text alignment. */
+    text-align: right;
+
+    /* Margin. */
+    margin: 20px 0;
+
+    /* Font size. */
+    font-size: 12px;
+
+    /* Line height. */
+    line-height: 1.7;
+
+    /* Soft color. */
+    color: var(--ink-soft);
+
+    /* Cursor. */
+    cursor: pointer;
+}
+
+
+/* Continue button. */
+.continue-btn {
+
+    /* Full width. */
+    width: 100%;
+
+    /* Padding. */
+    padding: 14px;
+
+    /* No border. */
+    border: none;
+
+    /* Rounded. */
+    border-radius: 12px;
+
+    /* Dedicated blue. */
+    background: var(--indigo);
+
+    /* White text. */
+    color: white;
+
+    /* Font. */
+    font-family: inherit;
+
+    font-weight: 900;
+
+    /* Cursor. */
+    cursor: pointer;
+
+    /* Animation. */
+    transition: 0.2s;
+}
+
+
+/* Continue hover. */
+.continue-btn:hover {
+
+    transform: translateY(-2px);
+
+    opacity: 0.92;
+}
+
+
+/* Error message. */
+.access-error {
+
+    color: var(--danger);
+
+    font-size: 13px;
+
+    min-height: 20px;
+
+    margin-bottom: 0;
+}
+
+
+/* ========================================================= */
+/* MAIN WEBSITE                                              */
+/* ========================================================= */
+
+/* Main content width. */
+.main-website {
+
+    /* Maximum width. */
+    max-width: 1200px;
+
+    /* Center page. */
+    margin: auto;
+
+    /* Side padding. */
+    padding: 0 25px 60px;
+}
+
+
+/* ========================================================= */
+/* HERO                                                      */
+/* ========================================================= */
+
+/* Hero section. */
+.hero-section {
+
+    /* Center text. */
+    text-align: center;
+
+    /* Spacing. */
+    padding: 75px 20px 50px;
+}
+
+
+/* Small hero title. */
+.hero-small-title {
+
+    /* Blue. */
+    color: var(--indigo);
+
+    /* Heavy. */
+    font-weight: 900;
+
+    /* Small. */
+    font-size: 12px;
+
+    /* Spacing. */
+    letter-spacing: 2px;
+}
+
+
+/* Hero main title. */
+.hero-section h1 {
+
+    /* Remove default margin. */
+    margin: 8px 0;
+
+    /* Large title. */
+    font-size: 52px;
+
+    /* Very heavy. */
+    font-weight: 900;
+}
+
+
+/* Hero description. */
+.hero-section p {
+
+    /* Remove large margin. */
+    margin: 0 auto;
+
+    /* Maximum width. */
+    max-width: 600px;
+
+    /* Soft text. */
+    color: var(--ink-soft);
+
+    /* Readability. */
+    line-height: 1.8;
+}
+
+
+/* ========================================================= */
+/* CONTENT SECTIONS                                          */
+/* ========================================================= */
+
+/* Each major section. */
+.content-section {
+
+    /* Space between sections. */
+    margin-top: 80px;
+}
+
+
+/* Section heading. */
+.section-heading {
+
+    /* Center everything. */
+    text-align: center;
+
+    /* Bottom spacing. */
+    margin-bottom: 30px;
+}
+
+
+/* Section label. */
+.section-label {
+
+    /* Display correctly. */
+    display: inline-block;
+
+    /* Blue. */
+    color: var(--indigo);
+
+    /* Small. */
+    font-size: 12px;
+
+    /* Bold. */
+    font-weight: 900;
+
+    /* Letter spacing. */
+    letter-spacing: 2px;
+
+    /* Bottom spacing. */
+    margin-bottom: 8px;
+}
+
+
+/* Section title. */
+.section-heading h2 {
+
+    /* Remove default margin. */
+    margin: 0;
+
+    /* Font size. */
+    font-size: 30px;
+
+    /* Heavy. */
+    font-weight: 900;
+}
+
+
+/* Section description. */
+.section-heading p {
+
+    /* Small spacing. */
+    margin: 7px 0 0;
+
+    /* Soft text. */
+    color: var(--ink-soft);
+}
+
+
+/* ========================================================= */
+/* COURSE GRID                                               */
+/* ========================================================= */
+
+/* Grid containing cards. */
+.course-grid {
+
+    /* Use CSS grid. */
+    display: grid;
+
+    /* Three columns on large screens. */
+    grid-template-columns: repeat(3, 1fr);
+
+    /* Space between cards. */
+    gap: 18px;
+}
+
+
+/* Course card. */
+.course-card {
+
+    /* Card background. */
+    background: var(--card);
+
+    /* Border. */
+    border: 1px solid var(--line);
+
+    /* Rounded corners. */
+    border-radius: 18px;
+
+    /* Padding. */
+    padding: 25px;
+
+    /* Animation. */
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* Card hover. */
+.course-card:hover {
+
+    /* Move slightly upward. */
+    transform: translateY(-4px);
+
+    /* Add shadow. */
+    box-shadow:
+        0 15px 35px rgba(0, 39, 58, 0.08);
+}
+
+
+/* Course number. */
+.course-number {
+
+    /* Small number. */
+    font-size: 12px;
+
+    /* Blue. */
+    color: var(--indigo);
+
+    /* Heavy. */
+    font-weight: 900;
+    text-align: left;
+
+    /* Spacing. */
+    margin-bottom: 12px;
+}
+
+
+/* Card title. */
+.course-card h4 {
+
+    /* Margin. */
+    margin: 0 0 8px;
+
+    /* Font size. */
+    font-size: 19px;
+
+    /* Heavy. */
+    font-weight: 900;
+    text-align: center;
+    margin-left: 0%;
+}
+
+
+/* Card description. */
+.course-card p {
+
+    /* Margin. */
+    margin: 0 0 20px;
+
+    /* Soft color. */
+    color: var(--ink-soft);
+
+    /* Line height. */
+    line-height: 1.7;
+
+    /* Font size. */
+    font-size: 13px;
+    text-align: center;
+
+    /* Minimum height makes cards consistent. */
+    min-height: 45px;
+}
+
+
+/* ========================================================= */
+/* COURSE BUTTON                                             */
+/* ========================================================= */
+
+/* This controls "مشاهدة الدرس" and question buttons. */
+.course-btn {
+
+    /* Full width. */
+    width: 100%;
+
+    /* Padding. */
+    padding: 12px 18px;
+
+    /* Dedicated course button color. */
+    background: var(--course-button);
+
+    /* White text. */
+    color: white;
+
+    /* Remove border. */
+    border: none;
+
+    /* Rounded. */
+    border-radius: 11px;
+
+    /* Font. */
+    font-family: inherit;
+
+    /* Heavy. */
+    font-weight: 800;
+
+    /* Cursor. */
+    cursor: pointer;
+
+    /* Animation. */
+    transition: 0.2s;
+}
+
+
+/* Course button hover. */
+.course-btn:hover {
+
+    /* Slight upward movement. */
+    transform: translateY(-2px);
+
+    /* Slight transparency. */
+    opacity: 0.9;
+}
+
+
+/* ========================================================= */
+/* EXAM SECTION                                              */
+/* ========================================================= */
+
+/* Exam simulator section. */
+.exam-section {
+
+    /* Large spacing above. */
+    margin-top: 100px;
+
+    /* Bottom spacing. */
+    margin-bottom: 40px;
+
+    /* Padding. */
+    padding: 55px 25px;
+
+    /* Center. */
+    text-align: center;
+
+    /* Card. */
+    background: var(--card);
+
+    /* Border. */
+    border: 1px solid var(--line);
+
+    /* Rounded. */
+    border-radius: 24px;
+
+    /* Shadow. */
+    box-shadow:
+        0 15px 40px rgba(0, 39, 58, 0.07);
+}
+
+
+/* Small exam label. */
+.exam-small-title {
+
+    color: var(--indigo);
+
+    font-size: 11px;
+
+    font-weight: 900;
+
+    letter-spacing: 2px;
+}
+
+
+/* Exam title. */
+.exam-section h2 {
+
+    margin: 8px 0;
+
+    font-size: 32px;
+
+    font-weight: 900;
+}
+
+
+/* Exam description. */
+.exam-section p {
+
+    max-width: 600px;
+
+    margin: 0 auto 25px;
+
+    color: var(--ink-soft);
+
+    line-height: 1.8;
+}
+
+
+/* Exam button. */
+.exam-btn {
+
+    /* Put text and arrow together. */
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 20px;
+
+    /* Minimum width. */
+    min-width: 240px;
+
+    /* Padding. */
+    padding: 16px 28px;
+
+    /* Blue. */
+    background: var(--indigo);
+
+    /* White text. */
+    color: white;
+
+    /* Remove border. */
+    border: none;
+
+    /* Rounded. */
+    border-radius: 14px;
+
+    /* Font. */
+    font-family: inherit;
+
+    font-size: 16px;
+
+    font-weight: 900;
+
+    /* Cursor. */
+    cursor: pointer;
+
+    /* Shadow. */
+    box-shadow:
+        0 10px 25px rgba(0, 104, 155, 0.25);
+
+    /* Animation. */
+    transition: 0.2s;
+}
+
+
+/* Exam button hover. */
+.exam-btn:hover {
+
+    /* Move up. */
+    transform: translateY(-3px);
+
+    /* Stronger shadow. */
+    box-shadow:
+        0 15px 30px rgba(0, 104, 155, 0.35);
+}
+
+
+/* Exam arrow. */
+.exam-arrow {
+
+    font-size: 21px;
+
+    transition: 0.2s;
+}
+
+
+/* Move arrow when hovering. */
+.exam-btn:hover .exam-arrow {
+
+    transform: translateX(-5px);
+}
+
+
+/* ========================================================= */
+/* VIDEO MODAL                                               */
+/* ========================================================= */
+
+/* Dark overlay behind video. */
+.modal {
+
+    /* Fixed to entire screen. */
+    position: fixed;
+
+    inset: 0;
+
+    /* Dark transparent background. */
+    background: rgba(0, 0, 0, 0.75);
+
+    /* Center player. */
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    /* Keep modal above everything. */
+    z-index: 9999;
+
+    /* Padding. */
+    padding: 20px;
+}
+
+
+/* Video modal box. */
+.video-modal {
+
+    /* Width. */
+    width: 100%;
+
+    /* Maximum width. */
+    max-width: 950px;
+
+    /* Card background. */
+    background: var(--card);
+
+    /* Rounded. */
+    border-radius: 18px;
+
+    /* Hide overflowing video corners. */
+    overflow: hidden;
+
+    /* Shadow. */
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.4);
+}
+
+
+/* Video header. */
+.video-header {
+
+    /* Put title and close button on opposite sides. */
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    /* Padding. */
+    padding: 15px 18px;
+
+    /* Border. */
+    border-bottom: 1px solid var(--line);
+}
+
+
+/* Video title. */
+.video-header h3 {
+
+    margin: 0;
+
+    font-size: 17px;
+
+    font-weight: 900;
+}
+
+
+/* Close button. */
+.close-btn {
+
+    width: 38px;
+
+    height: 38px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: var(--paper);
+
+    color: var(--ink);
+
+    font-size: 25px;
+
+    cursor: pointer;
+}
+
+
+/* Video area. */
+.video-container {
+
+    /* Position relative so placeholder can cover video. */
+    position: relative;
+
+    /* Black video background. */
+    background: #000;
+
+    /* Aspect ratio. */
+    aspect-ratio: 16 / 9;
+}
+
+
+/* Video element. */
+.video-container video {
+
+    /* Fill the entire video area. */
+    width: 100%;
+
+    height: 100%;
+
+    /* Keep video proportional. */
+    object-fit: contain;
+
+    /* Black background. */
+    background: #000;
+
+    /* Disable normal right-click. */
+    user-select: none;
+}
+
+
+/* Video placeholder. */
+.video-placeholder {
+
+    /* Cover the video. */
+    position: absolute;
+
+    inset: 0;
+
+    /* Dark background. */
+    background: #06141c;
+
+    /* Center content. */
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    /* Above video. */
+    z-index: 2;
+
+    /* White text. */
+    color: white;
+}
+
+
+/* Placeholder logo. */
+.placeholder-logo {
+
+    width: 70px;
+
+    height: 70px;
+
+    border-radius: 18px;
+
+    background: var(--indigo);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: 900;
+
+    font-size: 22px;
+}
+
+
+/* Placeholder text. */
+.video-placeholder p {
+
+    margin-top: 12px;
+
+    font-weight: 800;
+}
+
+
+/* ========================================================= */
+/* VIDEO CONTROLS                                            */
+/* ========================================================= */
+
+/* Controls container. */
+.video-controls {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px 15px;
+
+    background: #0B1115;
+
+    color: white;
+}
+
+
+/* Control button. */
+.control-btn {
+
+    border: none;
+
+    background: transparent;
+
+    color: white;
+
+    font-size: 17px;
+
+    cursor: pointer;
+
+    padding: 5px;
+}
+
+
+/* Progress bar. */
+.progress-bar {
+
+    flex: 1;
+    accent-color: var(--indigo);
+
+    cursor: pointer;
+}
+
+
+/* Volume bar. */
+.volume-bar {
+
+    width: 80px;
+    accent-color: var(--indigo);
+
+    cursor: pointer;
+}
+
+
+/* Speed selector. */
+.speed-select {
+
+    border: 1px solid #39434A;
+
+    background: #11191E;
+
+    color: white;
+
+    border-radius: 6px;
+
+    padding: 5px;
+
+    font-family: inherit;
+}
+
+
+/* ========================================================= */
+/* LESSON INFORMATION                                        */
+/* ========================================================= */
+
+/* Lesson information box. */
+.lesson-info {
+
+    padding: 20px 22px;
+}
+
+
+/* Lesson title. */
+.lesson-info h3 {
+
+    margin: 0 0 7px;
+
+    font-size: 20px;
+
+    font-weight: 900;
+}
+
+
+/* Lesson description. */
+.lesson-info p {
+
+    margin: 0;
+
+    color: var(--ink-soft);
+
+    line-height: 1.8;
+}
+
+
+/* Navigation buttons. */
+.lesson-navigation {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 0 22px 22px;
+}
+
+
+/* Navigation button. */
+.navigation-btnN {
+
+    flex: 1;
+
+    padding: 12px;
+
+    border: 1px solid var(--line);
+
+    background: #00689b;
+
+    color: white;
+
+    border-radius: 10px;
+
+    font-family: inherit;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+/* Navigation button. */
+.navigation-btnP {
+
+    flex: 1;
+
+    padding: 12px;
+
+    border: 1px solid var(--line);
+
+    background: var(--paper);
+
+    color: var(--ink);
+
+    border-radius: 10px;
+
+    font-family: inherit;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+/* Disabled navigation button. */
+.navigation-btn:disabled {
+
+    cursor: not-allowed;
+
+    opacity: 0.4;
+}
+
+
+/* ========================================================= */
+/* MOBILE                                                    */
+/* ========================================================= */
+
+@media (max-width: 800px) {
+
+    /* Change three columns to two. */
+    .course-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Smaller hero title. */
+    .hero-section h1 {
+        font-size: 42px;
+    }
+
+}
+
+
+/* Small phone screens. */
+@media (max-width: 550px) {
+
+    /* One card per row. */
+    .course-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Smaller page padding. */
+    .main-website {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* Smaller header padding. */
+    .top-header {
+        padding: 15px;
+    }
+
+    /* Smaller hero. */
+    .hero-section {
+        padding-top: 50px;
+    }
+
+    /* Smaller hero title. */
+    .hero-section h1 {
+        font-size: 36px;
+    }
+
+    /* Smaller section title. */
+    .section-heading h2 {
+        font-size: 26px;
+    }
+
+    /* Smaller access box. */
+    .access-box {
+        padding: 30px 20px;
+    }
+
+    /* Make video controls wrap. */
+    .video-controls {
+        flex-wrap: wrap;
+    }
+
+    /* Make progress bar take full row. */
+    .progress-bar {
+        order: 10;
+        flex-basis: 100%;
+    }
+
+}
+
+/* ========================================================= */
+/* FOOTER                                                    */
+/* ========================================================= */
+
+/* This controls the entire footer. */
+.site-footer {
+
+    /* Give the footer space from the content above. */
+    margin-top: 70px;
+
+    /* Add space below the copyright. */
+    padding: 0 25px 30px;
+
+    /* Center the copyright text. */
+    text-align: center;
+}
+
+
+/* This creates the horizontal line. */
+.footer-line {
+
+    /* Use the existing border color. */
+    background: var(--line);
+
+    /* Make the line fill the available width. */
+    width: 100%;
+
+    /* Set the line height. */
+    height: 1px;
+
+    /* Add space below the line. */
+    margin-bottom: 20px;
+}
+
+
+/* This controls the copyright text. */
+.site-footer p {
+
+    /* Remove the default paragraph margin. */
+    margin: 0;
+
+    /* Use the soft text color. */
+    color: var(--ink-soft);
+
+    /* Small professional text. */
+    font-size: 12px;
+
+    /* Medium font weight. */
+    font-weight: 500;
+}
