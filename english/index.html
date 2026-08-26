@@ -1,1 +1,346 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Yazeed English - Interactive Reader</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf_viewer.min.css"
+    >
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =====================================================
+         التطبيق الرئيسي
+    ====================================================== -->
+
+    <div id="readerApp" class="app" hidden>
+
+        <header class="topbar">
+
+            <div class="brand">
+
+                <div class="brand-icon">
+                    📖
+                </div>
+
+                <div>
+                    <h1>Yazeed English</h1>
+                    <p>منصة التعلم التفاعلي</p>
+                </div>
+
+            </div>
+
+            <div class="access-badge">
+                🔒 وصول خاص
+            </div>
+
+        </header>
+
+
+        <!-- لوحة التحكم بالصوت -->
+
+        <section class="voice-panel">
+
+            <div class="voice-panel-inner">
+
+                <div class="voice-control">
+
+                    <label for="voiceSelect">
+                        🎙️ الصوت
+                    </label>
+
+                    <select id="voiceSelect">
+                        <option>جارٍ تحميل الأصوات...</option>
+                    </select>
+
+                </div>
+
+                <div class="speed-control">
+
+                    <label for="speedRange">
+                        سرعة القراءة
+                    </label>
+
+                    <div class="speed-row">
+
+                        <span class="speed-icon">🐢</span>
+
+                        <input
+                            type="range"
+                            id="speedRange"
+                            min="0.5"
+                            max="1.5"
+                            step="0.05"
+                            value="0.85"
+                        >
+
+                        <span class="speed-icon">🐇</span>
+
+                        <span id="speedValue" class="speed-value">
+                            0.85×
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <button
+                    id="testVoiceButton"
+                    class="test-voice-button"
+                    type="button"
+                >
+                    🔊 اختبار الصوت
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- شريط الأدوات -->
+
+        <div class="toolbar">
+
+            <div class="toolbar-group">
+
+                <button
+                    id="previousPage"
+                    class="tool-button"
+                    title="الصفحة السابقة"
+                    aria-label="الصفحة السابقة"
+                    type="button"
+                >
+                    →
+                </button>
+
+                <div class="page-info">
+
+                    <input
+                        type="number"
+                        id="pageInput"
+                        class="page-input"
+                        min="1"
+                        value="1"
+                        aria-label="رقم الصفحة"
+                    >
+
+                    <span class="page-separator">/</span>
+
+                    <span id="totalPages">0</span>
+
+                </div>
+
+                <button
+                    id="nextPage"
+                    class="tool-button"
+                    title="الصفحة التالية"
+                    aria-label="الصفحة التالية"
+                    type="button"
+                >
+                    ←
+                </button>
+
+            </div>
+
+
+            <div class="toolbar-group">
+
+                <button
+                    id="zoomOut"
+                    class="tool-button"
+                    title="تصغير"
+                    aria-label="تصغير"
+                    type="button"
+                >
+                    −
+                </button>
+
+                <span id="zoomLevel" class="zoom-level">100%</span>
+
+                <button
+                    id="zoomIn"
+                    class="tool-button"
+                    title="تكبير"
+                    aria-label="تكبير"
+                    type="button"
+                >
+                    +
+                </button>
+
+            </div>
+
+
+            <div class="toolbar-group annotation-tools">
+
+                <button
+                    id="handTool"
+                    class="tool-button mode-button active"
+                    title="النطق"
+                    aria-label="النطق"
+                    type="button"
+                >
+                    🖐️
+                </button>
+
+                <button
+                    id="penTool"
+                    class="tool-button mode-button"
+                    title="القلم"
+                    aria-label="القلم"
+                    type="button"
+                >
+                    ✏️
+                </button>
+<button
+                    id="eraserTool"
+                    class="tool-button mode-button"
+                    title="الممحاة"
+                    aria-label="الممحاة"
+                    type="button"
+                >
+                    🧽
+                </button>
+</div>
+
+        </div>
+
+
+        <!-- =====================================================
+     عارض PDF
+====================================================== -->
+
+<main class="viewer-container" id="viewerContainer">
+
+    <div id="pdfViewer" class="pdf-viewer"></div>
+
+
+    <!-- =================================================
+         شاشة تحميل المحتوى
+    ================================================== -->
+
+    <div
+        id="contentLoadingOverlay"
+        class="content-loading-overlay"
+        hidden
+        role="status"
+        aria-live="polite"
+        aria-label="جارٍ تحميل المحتوى"
+    >
+
+        <div class="content-loading-card">
+
+            <div class="content-loading-icon">
+                📖
+            </div>
+
+            <div class="content-loading-spinner"></div>
+
+            <h2>
+                جارٍ تحميل المحتوى
+            </h2>
+
+            <p>
+                يرجى الانتظار
+            </p>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+        <!-- شريط الحالة -->
+
+        <footer class="statusbar">
+
+            <div id="statusMessage" class="status-message">
+                جارٍ تحميل الملف...
+            </div>
+
+            <div id="pronunciationStatus" class="pronunciation-status">
+                🖐️ اضغط على أي كلمة إنجليزية لسماع النطق
+            </div>
+
+            <div class="footer-links">
+
+                <a
+                    href="https://yazeedenglish.com/orders"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    تقييمك يهمنا
+                </a>
+
+                <a
+                    href="https://wa.me/966500000000?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D8%AD%D8%AA%D8%A7%D8%AC%20%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D8%A9%20%D8%A8%D8%AE%D8%B5%D9%88%D8%B5%20%D8%A7%D9%84%D9%82%D8%A7%D8%B1%D8%A6%20%D8%A7%D9%84%D8%AA%D9%81%D8%A7%D8%B9%D9%84%D9%8A."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    id="supportLink"
+                >
+                    الدعم الفني
+                </a>
+
+            </div>
+
+        </footer>
+
+    </div>
+
+
+    <!-- =====================================================
+         إشعار أول استخدام
+    ====================================================== -->
+
+    <div
+        id="pronunciationModal"
+        class="modal-backdrop"
+        hidden
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="pronunciationModalTitle"
+    >
+
+        <div class="modal-card">
+
+            <div class="modal-icon">🎧</div>
+
+            <h2 id="pronunciationModalTitle">
+                طريقة استخدام النطق
+            </h2>
+
+            <p>
+                اضغط على اي كلمة انجليزية لسماع النطق
+            </p>
+
+            <button
+                id="understoodButton"
+                class="primary-button modal-button"
+                type="button"
+            >
+                فهمت
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script type="module" src="script.js"></script>
+
+</body>
+
+</html>
 
