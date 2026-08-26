@@ -2,274 +2,146 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <title>Yazeed English — مركز الدورات</title>
 
-    <title>
-        Yazeed English — تفعيل الوصول
-    </title>
-
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
-
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link
         href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap"
         rel="stylesheet"
     >
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
     <header class="top-header">
 
-        <a
-            href="/"
-            class="brand"
-        >
+        <div class="brand">
 
-            <div class="brand-mark">
-                YE
-            </div>
+            <img
+                src="logo.png"
+                alt="Yazeed English"
+                class="brand-logo"
+                onerror="this.style.display='none';"
+            >
 
             <div class="brand-text">
-
-                <strong>
-                    Yazeed English
-                </strong>
-
-                <span>
-                    تفعيل الوصول
-                </span>
-
+                <strong>Yazeed English</strong>
+                <span>مركز الدورات التعليمية</span>
             </div>
 
-        </a>
+        </div>
 
+        <div class="theme-buttons">
 
-        <button
-            id="themeToggle"
-            class="theme-btn"
-            type="button"
-        >
-            🌙
-        </button>
+            <button
+                id="themeToggle"
+                class="theme-btn"
+                type="button"
+                aria-label="تغيير الوضع"
+            >
+                🌙
+            </button>
+
+        </div>
 
     </header>
 
 
-    <main class="access-screen">
+    <main class="main-website">
 
+        <section class="hero-section">
 
-        <!-- ============================================
-             VERIFY
-        ============================================= -->
-
-        <section
-            id="verifyScreen"
-            class="access-box"
-        >
-
-            <div class="access-logo">
-                YE
-            </div>
-
-            <span class="access-label">
-                COURSE ACTIVATION
+            <span class="hero-small-title">
+                YAZEED ENGLISH
             </span>
 
             <h1>
-                تفعيل الوصول
-            </h1>
-
-            <p class="access-description">
-                أدخل رقم طلبك ورمز الوصول للمتابعة إلى دورتك.
-            </p>
-
-
-            <label
-                class="field-label"
-                for="orderInput"
-            >
-                رقم الطلب
-            </label>
-
-            <input
-                id="orderInput"
-                class="access-input"
-                type="text"
-                inputmode="numeric"
-                autocomplete="off"
-                maxlength="9"
-                placeholder="مثال: 212345678"
-            >
-
-
-            <label
-                class="field-label"
-                for="accessCodeInput"
-            >
-                رمز الوصول
-            </label>
-
-            <input
-                id="accessCodeInput"
-                class="access-input access-code"
-                type="password"
-                inputmode="numeric"
-                autocomplete="off"
-                maxlength="6"
-                placeholder="6 أرقام"
-            >
-
-
-            <p
-                id="verifyError"
-                class="access-error"
-                aria-live="polite"
-            ></p>
-
-
-            <button
-                id="verifyButton"
-                class="primary-button"
-                type="button"
-            >
-                تحقق ومتابعة
-            </button>
-
-        </section>
-
-
-        <!-- ============================================
-             CONSENT
-        ============================================= -->
-
-        <section
-            id="consentScreen"
-            class="access-box policy-box"
-            hidden
-        >
-
-            <div class="access-logo">
-                📜
-            </div>
-
-            <span class="access-label">
-                CONTENT POLICY
-            </span>
-
-            <h1>
-                إقرار وشروط الاستخدام
-            </h1>
-
-            <h2
-                id="consentCourseTitle"
-                class="consent-course-title"
-            ></h2>
-
-            <p class="access-description">
-                قبل الوصول إلى المحتوى، يرجى قراءة الإقرار والموافقة عليه.
-            </p>
-
-
-            <div class="policy-content">
-
-                <p>
-                    أقر بأن المحتوى التعليمي الذي سأصل إليه مخصص
-                    للاستخدام الشخصي فقط.
-                </p>
-
-                <p>
-                    أتعهد بعدم نسخ أو تصوير أو مشاركة أو إعادة نشر
-                    أو توزيع محتوى الدورة أو إتاحته للغير بأي وسيلة.
-                </p>
-
-                <p>
-                    كما أتعهد باحترام حقوق الملكية الفكرية الخاصة
-                    بـ Yazeed English وعدم استخدام المحتوى خارج
-                    نطاق الاستخدام المسموح به.
-                </p>
-
-            </div>
-
-
-            <label class="agreement-label">
-
-                <input
-                    id="consentCheckbox"
-                    type="checkbox"
-                >
-
-                <span>
-                    أوافق على الإقرار وأتعهد بعدم مشاركة
-                    أو نشر أو توزيع محتوى الدورة.
-                </span>
-
-            </label>
-
-
-            <p
-                id="consentError"
-                class="access-error"
-                aria-live="polite"
-            ></p>
-
-
-            <button
-                id="consentButton"
-                class="primary-button"
-                type="button"
-                disabled
-            >
-                أوافق وأدخل الدورة
-            </button>
-
-        </section>
-
-
-        <!-- ============================================
-             SUCCESS / LOADING
-        ============================================= -->
-
-        <section
-            id="loadingScreen"
-            class="access-box loading-box"
-            hidden
-        >
-
-            <div class="loading-spinner"></div>
-
-            <h1>
-                جارٍ تجهيز وصولك...
+                دوراتك التعليمية في مكان واحد
             </h1>
 
             <p>
-                سيتم تحويلك إلى الدورة.
+                اختر الدورة التي تريد الوصول إليها، أو اكتشف بقية دورات Yazeed English.
             </p>
+
+        </section>
+
+
+        <section class="content-section">
+
+            <div class="section-heading">
+
+                <span class="section-label">
+                    COURSES
+                </span>
+
+                <h2>
+                    دورات Yazeed English
+                </h2>
+
+                <p>
+                    جميع منتجاتنا أمامك في مكان واحد.
+                </p>
+
+            </div>
+
+
+            <div
+                id="courseGrid"
+                class="course-grid"
+            ></div>
+
+        </section>
+
+
+        <section class="store-section">
+
+            <div>
+
+                <span class="section-label">
+                    YAZEED ENGLISH STORE
+                </span>
+
+                <h2>
+                    اكتشف المزيد من دوراتنا
+                </h2>
+
+                <p>
+                    تصفح جميع المنتجات والدورات من متجر Yazeed English.
+                </p>
+
+            </div>
+
+            <a
+                href="https://yazeedenglish.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="store-btn"
+            >
+                زيارة المتجر
+                <span>↗</span>
+            </a>
 
         </section>
 
     </main>
+
+
+    <footer class="site-footer">
+
+        <div class="footer-line"></div>
+
+        <p>
+            جميع الحقوق محفوظة © 2026 Yazeed English
+        </p>
+
+    </footer>
 
 
     <script src="script.js"></script>

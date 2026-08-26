@@ -1,162 +1,125 @@
 /* =========================================================
-   YAZEED ENGLISH — ACTIVATION SYSTEM
+   YAZEED ENGLISH HUB
+========================================================= */
+
+const STORE_URL = "https://yazeedenglish.com";
+
+const ACCESS_PREFIX =
+    "yazeed_course_access_";
+
+const ACCESS_DURATION =
+    30 * 24 * 60 * 60 * 1000;
+
+
+/* =========================================================
+   COURSES
 ========================================================= */
 
 const COURSES = {
 
     step: {
+        key: "step",
+
         title: "STEP Course",
 
-        code: "111111",
+        description:
+            "دورة STEP لتطوير مهاراتك والاستعداد للاختبار.",
 
-        url: "/step"
+        url: "/step",
+
+        activateUrl:
+            "/activate?course=step",
+
+        purchaseUrl:
+            STORE_URL,
+
+        image:
+            "images/step.png",
+
+        fallback:
+            "STEP"
     },
 
 
     english: {
+        key: "english",
+
         title: "English Course",
 
-        code: "222222",
+        description:
+            "القارئ التفاعلي الخاص بدورة English.",
 
-        url: "/course"
+        url: "/course",
+
+        activateUrl:
+            "/activate?course=english",
+
+        purchaseUrl:
+            STORE_URL,
+
+        image:
+            "images/english.png",
+
+        fallback:
+            "EN"
     },
 
 
     trab6: {
+        key: "trab6",
+
         title: "Trab6",
 
-        code: "333333",
+        description:
+            "الوصول إلى محتوى Trab6 التفاعلي.",
 
-        url: "/trab6"
+        url: "/trab6",
+
+        activateUrl:
+            "/activate?course=trab6",
+
+        purchaseUrl:
+            STORE_URL,
+
+        image:
+            "images/trab6.png",
+
+        fallback:
+            "T6"
     },
 
 
     writing: {
+        key: "writing",
+
         title: "Writing",
 
-        code: "444444",
+        description:
+            "الوصول إلى محتوى Writing التفاعلي.",
 
-        url: "/writing"
+        url: "/writing",
+
+        activateUrl:
+            "/activate?course=writing",
+
+        purchaseUrl:
+            STORE_URL,
+
+        image:
+            "images/writing.png",
+
+        fallback:
+            "WR"
     }
 
 };
 
 
-const ACCESS_PREFIX =
-    "yazeed_course_access_";
-
-
-const ACCESS_DURATION =
-    30 *
-    24 *
-    60 *
-    60 *
-    1000;
-
-
 /* =========================================================
-   DOM
+   ACCESS HELPERS
 ========================================================= */
 
-const verifyScreen =
-    document.getElementById(
-        "verifyScreen"
-    );
-
-const consentScreen =
-    document.getElementById(
-        "consentScreen"
-    );
-
-const loadingScreen =
-    document.getElementById(
-        "loadingScreen"
-    );
-
-const orderInput =
-    document.getElementById(
-        "orderInput"
-    );
-
-const accessCodeInput =
-    document.getElementById(
-        "accessCodeInput"
-    );
-
-const verifyButton =
-    document.getElementById(
-        "verifyButton"
-    );
-
-const verifyError =
-    document.getElementById(
-        "verifyError"
-    );
-
-const consentCourseTitle =
-    document.getElementById(
-        "consentCourseTitle"
-    );
-
-const consentCheckbox =
-    document.getElementById(
-        "consentCheckbox"
-    );
-
-const consentButton =
-    document.getElementById(
-        "consentButton"
-    );
-
-const consentError =
-    document.getElementById(
-        "consentError"
-    );
-
-const themeToggle =
-    document.getElementById(
-        "themeToggle"
-    );
-
-
-let selectedCourseKey =
-    null;
-
-
-/* =========================================================
-   COURSE PARAMETER
-========================================================= */
-
-const query =
-    new URLSearchParams(
-        window.location.search
-    );
-
-const requestedCourse =
-    query.get(
-        "course"
-    );
-
-
-if (
-    requestedCourse &&
-    !COURSES[requestedCourse]
-) {
-
-    console.warn(
-        "Unknown course parameter."
-    );
-
-}
-
-
-/* =========================================================
-   ACCESS STORAGE
-========================================================= */
-
-function accessKey(
-    courseKey
-) {
+function getAccessKey(courseKey) {
 
     return (
         ACCESS_PREFIX +
@@ -166,394 +129,512 @@ function accessKey(
 }
 
 
-function saveAccess(
-    courseKey
-) {
+function getCourseAccess(courseKey) {
 
-    const now =
-        Date.now();
+    const raw =
+        localStorage.getItem(
+            getAccessKey(courseKey)
+        );
 
-
-    const access = {
-
-        course:
-            courseKey,
-
-        consentAccepted:
-            true,
-
-        activatedAt:
-            now,
-
-        expiresAt:
-            now +
-            ACCESS_DURATION
-
-    };
+    if (!raw) {
+        return null;
+    }
 
 
-    localStorage.setItem(
-        accessKey(
-            courseKey
-        ),
-        JSON.stringify(
-            access
-        )
-    );
+    try {
 
-}
+        const access =
+            JSON.parse(raw);
 
-
-/* =========================================================
-   VALIDATION
-========================================================= */
-
-function validOrderNumber(
-    value
-) {
-
-    return /^2\d{8}$/.test(
-        value
-    );
-
-}
-
-
-function getCourseFromCode(
-    code
-) {
-
-    for (
-        const [
-            key,
-            course
-        ]
-        of Object.entries(
-            COURSES
-        )
-    ) {
 
         if (
-            course.code ===
-            code
+            !access ||
+            typeof access.expiresAt !==
+                "number" ||
+            access.consentAccepted !==
+                true
         ) {
 
-            return {
-                key,
-                course
-            };
+            localStorage.removeItem(
+                getAccessKey(courseKey)
+            );
+
+            return null;
 
         }
 
+
+        if (
+            Date.now() >=
+            access.expiresAt
+        ) {
+
+            localStorage.removeItem(
+                getAccessKey(courseKey)
+            );
+
+            return null;
+
+        }
+
+
+        return access;
+
+    } catch (error) {
+
+        localStorage.removeItem(
+            getAccessKey(courseKey)
+        );
+
+        return null;
+
     }
-
-
-    return null;
 
 }
 
 
 /* =========================================================
-   VERIFY
+   COURSE STATE
 ========================================================= */
 
-function verifyCustomer() {
+function getCourseState(courseKey) {
 
-    verifyError.textContent =
-        "";
-
-
-    const orderNumber =
-        orderInput.value
-            .trim();
+    const access =
+        getCourseAccess(courseKey);
 
 
-    const accessCode =
-        accessCodeInput.value
-            .trim();
-
-
-    if (
-        !validOrderNumber(
-            orderNumber
-        )
-    ) {
-
-        verifyError.textContent =
-            "رقم الطلب يجب أن يكون 9 أرقام بالضبط ويبدأ بالرقم 2.";
-
-        orderInput.focus();
-
-        return;
-
+    if (access) {
+        return "active";
     }
 
 
-    if (
-        !/^\d{6}$/.test(
-            accessCode
-        )
-    ) {
-
-        verifyError.textContent =
-            "رمز الوصول يجب أن يتكون من 6 أرقام.";
-
-        accessCodeInput.focus();
-
-        return;
-
-    }
-
-
-    const result =
-        getCourseFromCode(
-            accessCode
+    const raw =
+        localStorage.getItem(
+            getAccessKey(courseKey)
         );
 
 
-    if (!result) {
+    if (raw) {
 
-        verifyError.textContent =
-            "رقم الطلب أو رمز الوصول غير صحيح.";
+        try {
 
-        accessCodeInput.focus();
+            const saved =
+                JSON.parse(raw);
 
-        return;
+            if (
+                saved &&
+                typeof saved.expiresAt ===
+                    "number" &&
+                Date.now() >=
+                    saved.expiresAt
+            ) {
+
+                return "expired";
+
+            }
+
+        } catch {
+
+            return "locked";
+
+        }
 
     }
 
 
-    if (
-        requestedCourse &&
-        requestedCourse !== result.key
-    ) {
-
-        verifyError.textContent =
-            "رمز الوصول لا يطابق الدورة المختارة.";
-
-        accessCodeInput.focus();
-
-        return;
-
-    }
-
-
-    selectedCourseKey =
-        result.key;
-
-
-    consentCourseTitle.textContent =
-        result.course.title;
-
-
-    verifyScreen.hidden =
-        true;
-
-    consentScreen.hidden =
-        false;
-
-
-    consentCheckbox.checked =
-        false;
-
-    consentButton.disabled =
-        true;
-
-    consentError.textContent =
-        "";
-
-
-    setTimeout(
-        () => {
-            consentCheckbox.focus();
-        },
-        50
-    );
+    return "locked";
 
 }
 
 
 /* =========================================================
-   CONSENT
+   IMAGE
 ========================================================= */
 
-consentCheckbox.addEventListener(
-    "change",
-    () => {
+function createCourseImage(course) {
 
-        consentButton.disabled =
-            !consentCheckbox.checked;
+    const wrapper =
+        document.createElement("div");
 
-        consentError.textContent =
-            "";
-
-    }
-);
+    wrapper.className =
+        "course-image-wrap";
 
 
-function acceptConsent() {
+    const image =
+        document.createElement("img");
 
-    consentError.textContent =
-        "";
+    image.className =
+        "course-image";
 
+    image.src =
+        course.image;
 
-    if (
-        !consentCheckbox.checked
-    ) {
+    image.alt =
+        course.title;
 
-        consentError.textContent =
-            "يجب الموافقة على الإقرار للمتابعة.";
-
-        return;
-
-    }
+    image.loading =
+        "lazy";
 
 
-    if (
-        !selectedCourseKey
-    ) {
-
-        consentError.textContent =
-            "تعذر تحديد الدورة.";
-
-        return;
-
-    }
-
-
-    const course =
-        COURSES[
-            selectedCourseKey
-        ];
-
-
-    saveAccess(
-        selectedCourseKey
-    );
-
-
-    consentScreen.hidden =
-        true;
-
-    loadingScreen.hidden =
-        false;
-
-
-    setTimeout(
+    image.onerror =
         () => {
 
-            window.location.href =
-                course.url;
+            wrapper.innerHTML = "";
 
-        },
-        400
+            const fallback =
+                document.createElement(
+                    "div"
+                );
+
+            fallback.className =
+                "course-image-placeholder";
+
+            fallback.textContent =
+                course.fallback;
+
+            wrapper.appendChild(
+                fallback
+            );
+
+        };
+
+
+    wrapper.appendChild(
+        image
     );
+
+
+    return wrapper;
 
 }
 
 
 /* =========================================================
-   INPUT CLEANUP
+   RENDER
 ========================================================= */
 
-orderInput.addEventListener(
-    "input",
-    () => {
+function renderCourses() {
 
-        orderInput.value =
-            orderInput.value.replace(
-                /\D/g,
-                ""
+    const courseGrid =
+        document.getElementById(
+            "courseGrid"
+        );
+
+
+    courseGrid.innerHTML = "";
+
+
+    Object.values(
+        COURSES
+    ).forEach(
+        (course, index) => {
+
+            const state =
+                getCourseState(
+                    course.key
+                );
+
+
+            const card =
+                document.createElement(
+                    "article"
+                );
+
+            card.className =
+                "course-card";
+
+
+            card.style.animationDelay =
+                `${index * 70}ms`;
+
+
+            const imageWrap =
+                createCourseImage(
+                    course
+                );
+
+
+            /* -----------------------------------------
+               LOCK
+            ----------------------------------------- */
+
+            if (
+                state !==
+                "active"
+            ) {
+
+                const overlay =
+                    document.createElement(
+                        "div"
+                    );
+
+                overlay.className =
+                    "course-lock-overlay";
+
+
+                const lock =
+                    document.createElement(
+                        "div"
+                    );
+
+                lock.className =
+                    "course-lock";
+
+                lock.textContent =
+                    "🔒";
+
+
+                overlay.appendChild(
+                    lock
+                );
+
+                imageWrap.appendChild(
+                    overlay
+                );
+
+            }
+
+
+            /* -----------------------------------------
+               BODY
+            ----------------------------------------- */
+
+            const body =
+                document.createElement(
+                    "div"
+                );
+
+            body.className =
+                "course-body";
+
+
+            const status =
+                document.createElement(
+                    "div"
+                );
+
+            status.className =
+                "course-status";
+
+
+            const title =
+                document.createElement(
+                    "h3"
+                );
+
+            title.textContent =
+                course.title;
+
+
+            const description =
+                document.createElement(
+                    "p"
+                );
+
+            description.textContent =
+                course.description;
+
+
+            const actions =
+                document.createElement(
+                    "div"
+                );
+
+            actions.className =
+                "course-actions";
+
+
+            /* -----------------------------------------
+               ACTIVE
+            ----------------------------------------- */
+
+            if (
+                state ===
+                "active"
+            ) {
+
+                status.classList.add(
+                    "active"
+                );
+
+                status.innerHTML =
+                    "✓ <span>الوصول مفعّل</span>";
+
+
+                const enter =
+                    document.createElement(
+                        "a"
+                    );
+
+                enter.className =
+                    "course-btn primary";
+
+                enter.href =
+                    course.url;
+
+                enter.textContent =
+                    "دخول الدورة";
+
+
+                actions.appendChild(
+                    enter
+                );
+
+            }
+
+
+            /* -----------------------------------------
+               EXPIRED
+            ----------------------------------------- */
+
+            else if (
+                state ===
+                "expired"
+            ) {
+
+                status.classList.add(
+                    "expired"
+                );
+
+                status.innerHTML =
+                    "⏱ <span>انتهت الصلاحية</span>";
+
+
+                const reactivate =
+                    document.createElement(
+                        "a"
+                    );
+
+                reactivate.className =
+                    "course-btn primary";
+
+                reactivate.href =
+                    course.activateUrl;
+
+                reactivate.textContent =
+                    "إعادة التفعيل";
+
+
+                actions.appendChild(
+                    reactivate
+                );
+
+            }
+
+
+            /* -----------------------------------------
+               LOCKED
+            ----------------------------------------- */
+
+            else {
+
+                status.innerHTML =
+                    "🔒 <span>غير مفعّلة</span>";
+
+
+                const activate =
+                    document.createElement(
+                        "a"
+                    );
+
+                activate.className =
+                    "course-btn secondary";
+
+                activate.href =
+                    course.activateUrl;
+
+                activate.textContent =
+                    "تفعيل الوصول";
+
+
+                const purchase =
+                    document.createElement(
+                        "a"
+                    );
+
+                purchase.className =
+                    "course-btn primary";
+
+                purchase.href =
+                    course.purchaseUrl;
+
+                purchase.target =
+                    "_blank";
+
+                purchase.rel =
+                    "noopener noreferrer";
+
+                purchase.innerHTML =
+                    "اشتر الآن <span>↗</span>";
+
+
+                actions.appendChild(
+                    activate
+                );
+
+                actions.appendChild(
+                    purchase
+                );
+
+            }
+
+
+            body.appendChild(
+                status
             );
 
-        verifyError.textContent =
-            "";
-
-    }
-);
-
-
-accessCodeInput.addEventListener(
-    "input",
-    () => {
-
-        accessCodeInput.value =
-            accessCodeInput.value.replace(
-                /\D/g,
-                ""
+            body.appendChild(
+                title
             );
 
-        verifyError.textContent =
-            "";
+            body.appendChild(
+                description
+            );
 
-    }
-);
-
-
-orderInput.addEventListener(
-    "keydown",
-    event => {
-
-        if (
-            event.key ===
-            "Enter"
-        ) {
-
-            verifyCustomer();
-
-        }
-
-    }
-);
+            body.appendChild(
+                actions
+            );
 
 
-accessCodeInput.addEventListener(
-    "keydown",
-    event => {
+            card.appendChild(
+                imageWrap
+            );
 
-        if (
-            event.key ===
-            "Enter"
-        ) {
+            card.appendChild(
+                body
+            );
 
-            verifyCustomer();
+
+            courseGrid.appendChild(
+                card
+            );
 
         }
+    );
 
-    }
-);
-
-
-/* =========================================================
-   BUTTONS
-========================================================= */
-
-verifyButton.addEventListener(
-    "click",
-    verifyCustomer
-);
-
-
-consentButton.addEventListener(
-    "click",
-    acceptConsent
-);
+}
 
 
 /* =========================================================
    THEME
 ========================================================= */
 
+const themeToggle =
+    document.getElementById(
+        "themeToggle"
+    );
+
+
 function applyTheme() {
 
-    const saved =
+    const theme =
         localStorage.getItem(
             "theme"
         );
 
 
     if (
-        saved ===
+        theme ===
         "dark"
     ) {
 
@@ -565,6 +646,10 @@ function applyTheme() {
             "☀️";
 
     } else {
+
+        document.body.classList.remove(
+            "dark"
+        );
 
         themeToggle.textContent =
             "🌙";
@@ -583,7 +668,7 @@ themeToggle.addEventListener(
         );
 
 
-        const dark =
+        const isDark =
             document.body.classList.contains(
                 "dark"
             );
@@ -591,14 +676,14 @@ themeToggle.addEventListener(
 
         localStorage.setItem(
             "theme",
-            dark
+            isDark
                 ? "dark"
                 : "light"
         );
 
 
         themeToggle.textContent =
-            dark
+            isDark
                 ? "☀️"
                 : "🌙";
 
@@ -606,4 +691,16 @@ themeToggle.addEventListener(
 );
 
 
+/* =========================================================
+   START
+========================================================= */
+
 applyTheme();
+
+renderCourses();
+
+
+window.addEventListener(
+    "pageshow",
+    renderCourses
+);
