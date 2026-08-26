@@ -1,171 +1,609 @@
-const STORE_URL = "https://yazeedenglish.com";
-const ACCESS_PREFIX = "yazeed_course_access_";
+/* =========================================================
+   YAZEED ENGLISH — ACTIVATION SYSTEM
+========================================================= */
 
 const COURSES = {
+
     step: {
-        key: "step",
         title: "STEP Course",
-        description: "دورة STEP لتطوير مهاراتك والاستعداد للاختبار.",
-        url: "/step",
-        purchaseUrl: STORE_URL,
-        image: "images/step.png",
-        fallback: "STEP"
+
+        code: "111111",
+
+        url: "/step"
     },
+
+
     english: {
-        key: "english",
         title: "English Course",
-        description: "القارئ التفاعلي والمحتوى التعليمي الخاص بدورة English.",
-        url: "/course",
-        purchaseUrl: STORE_URL,
-        image: "images/english.png",
-        fallback: "EN"
+
+        code: "222222",
+
+        url: "/course"
     },
+
+
     trab6: {
-        key: "trab6",
         title: "Trab6",
-        description: "الوصول إلى محتوى Trab6 التفاعلي.",
-        url: "/trab6",
-        purchaseUrl: STORE_URL,
-        image: "images/trab6.png",
-        fallback: "T6"
+
+        code: "333333",
+
+        url: "/trab6"
     },
+
+
     writing: {
-        key: "writing",
         title: "Writing",
-        description: "الوصول إلى محتوى Writing التفاعلي.",
-        url: "/writing",
-        purchaseUrl: STORE_URL,
-        image: "images/writing.png",
-        fallback: "WR"
+
+        code: "444444",
+
+        url: "/writing"
     }
+
 };
 
-const courseGrid = document.getElementById("courseGrid");
-const themeToggle = document.getElementById("themeToggle");
 
-function readAccess(courseKey) {
-    const storageKey = `${ACCESS_PREFIX}${courseKey}`;
-    const raw = localStorage.getItem(storageKey);
-    if (!raw) return null;
+const ACCESS_PREFIX =
+    "yazeed_course_access_";
 
-    try {
-        const access = JSON.parse(raw);
-        if (!access || typeof access.expiresAt !== "number" || typeof access.consentAcceptedAt !== "number") {
-            localStorage.removeItem(storageKey);
-            return null;
-        }
-        if (Date.now() >= access.expiresAt) {
-            localStorage.removeItem(storageKey);
-            return null;
-        }
-        return access;
-    } catch {
-        localStorage.removeItem(storageKey);
-        return null;
-    }
+
+const ACCESS_DURATION =
+    30 *
+    24 *
+    60 *
+    60 *
+    1000;
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const verifyScreen =
+    document.getElementById(
+        "verifyScreen"
+    );
+
+const consentScreen =
+    document.getElementById(
+        "consentScreen"
+    );
+
+const loadingScreen =
+    document.getElementById(
+        "loadingScreen"
+    );
+
+const orderInput =
+    document.getElementById(
+        "orderInput"
+    );
+
+const accessCodeInput =
+    document.getElementById(
+        "accessCodeInput"
+    );
+
+const verifyButton =
+    document.getElementById(
+        "verifyButton"
+    );
+
+const verifyError =
+    document.getElementById(
+        "verifyError"
+    );
+
+const consentCourseTitle =
+    document.getElementById(
+        "consentCourseTitle"
+    );
+
+const consentCheckbox =
+    document.getElementById(
+        "consentCheckbox"
+    );
+
+const consentButton =
+    document.getElementById(
+        "consentButton"
+    );
+
+const consentError =
+    document.getElementById(
+        "consentError"
+    );
+
+const themeToggle =
+    document.getElementById(
+        "themeToggle"
+    );
+
+
+let selectedCourseKey =
+    null;
+
+
+/* =========================================================
+   COURSE PARAMETER
+========================================================= */
+
+const query =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const requestedCourse =
+    query.get(
+        "course"
+    );
+
+
+if (
+    requestedCourse &&
+    !COURSES[requestedCourse]
+) {
+
+    console.warn(
+        "Unknown course parameter."
+    );
+
 }
 
-function createImage(course, locked) {
-    const wrap = document.createElement("div");
-    wrap.className = "course-image-wrap";
 
-    const image = document.createElement("img");
-    image.className = "course-image";
-    image.src = course.image;
-    image.alt = course.title;
-    image.loading = "lazy";
-    image.onerror = () => {
-        wrap.innerHTML = "";
-        const fallback = document.createElement("div");
-        fallback.className = "course-image-placeholder";
-        fallback.textContent = course.fallback;
-        wrap.appendChild(fallback);
+/* =========================================================
+   ACCESS STORAGE
+========================================================= */
+
+function accessKey(
+    courseKey
+) {
+
+    return (
+        ACCESS_PREFIX +
+        courseKey
+    );
+
+}
+
+
+function saveAccess(
+    courseKey
+) {
+
+    const now =
+        Date.now();
+
+
+    const access = {
+
+        course:
+            courseKey,
+
+        consentAccepted:
+            true,
+
+        activatedAt:
+            now,
+
+        expiresAt:
+            now +
+            ACCESS_DURATION
+
     };
-    wrap.appendChild(image);
 
-    if (locked) {
-        const overlay = document.createElement("div");
-        overlay.className = "course-lock-overlay";
-        const lock = document.createElement("div");
-        lock.className = "course-lock";
-        lock.textContent = "🔒";
-        overlay.appendChild(lock);
-        wrap.appendChild(overlay);
-    }
-    return wrap;
+
+    localStorage.setItem(
+        accessKey(
+            courseKey
+        ),
+        JSON.stringify(
+            access
+        )
+    );
+
 }
 
-function renderCourses() {
-    courseGrid.innerHTML = "";
 
-    Object.values(COURSES).forEach((course, index) => {
-        const access = readAccess(course.key);
-        const active = Boolean(access);
+/* =========================================================
+   VALIDATION
+========================================================= */
 
-        const card = document.createElement("article");
-        card.className = "course-card";
-        card.style.animationDelay = `${index * 70}ms`;
-        card.appendChild(createImage(course, !active));
+function validOrderNumber(
+    value
+) {
 
-        const body = document.createElement("div");
-        body.className = "course-body";
+    return /^2\d{8}$/.test(
+        value
+    );
 
-        const status = document.createElement("div");
-        status.className = `course-status${active ? " active" : ""}`;
-        status.innerHTML = active ? "✓ <span>الوصول مفعّل</span>" : "🔒 <span>غير مفعّلة</span>";
+}
 
-        const title = document.createElement("h3");
-        title.textContent = course.title;
 
-        const description = document.createElement("p");
-        description.textContent = course.description;
+function getCourseFromCode(
+    code
+) {
 
-        const actions = document.createElement("div");
-        actions.className = "course-actions";
+    for (
+        const [
+            key,
+            course
+        ]
+        of Object.entries(
+            COURSES
+        )
+    ) {
 
-        if (active) {
-            const enter = document.createElement("a");
-            enter.className = "course-btn primary";
-            enter.href = course.url;
-            enter.textContent = "دخول الدورة";
-            actions.appendChild(enter);
-        } else {
-            const activate = document.createElement("a");
-            activate.className = "course-btn secondary";
-            activate.href = course.url;
-            activate.textContent = "تفعيل الوصول";
+        if (
+            course.code ===
+            code
+        ) {
 
-            const purchase = document.createElement("a");
-            purchase.className = "course-btn primary";
-            purchase.href = course.purchaseUrl;
-            purchase.target = "_blank";
-            purchase.rel = "noopener noreferrer";
-            purchase.innerHTML = "اشتر الآن <span>↗</span>";
+            return {
+                key,
+                course
+            };
 
-            actions.append(activate, purchase);
         }
 
-        body.append(status, title, description, actions);
-        card.appendChild(body);
-        courseGrid.appendChild(card);
-    });
+    }
+
+
+    return null;
+
 }
 
-function applySavedTheme() {
-    const saved = localStorage.getItem("theme");
-    const dark = saved === "dark";
-    document.body.classList.toggle("dark", dark);
-    themeToggle.textContent = dark ? "☀️" : "🌙";
+
+/* =========================================================
+   VERIFY
+========================================================= */
+
+function verifyCustomer() {
+
+    verifyError.textContent =
+        "";
+
+
+    const orderNumber =
+        orderInput.value
+            .trim();
+
+
+    const accessCode =
+        accessCodeInput.value
+            .trim();
+
+
+    if (
+        !validOrderNumber(
+            orderNumber
+        )
+    ) {
+
+        verifyError.textContent =
+            "رقم الطلب يجب أن يكون 9 أرقام بالضبط ويبدأ بالرقم 2.";
+
+        orderInput.focus();
+
+        return;
+
+    }
+
+
+    if (
+        !/^\d{6}$/.test(
+            accessCode
+        )
+    ) {
+
+        verifyError.textContent =
+            "رمز الوصول يجب أن يتكون من 6 أرقام.";
+
+        accessCodeInput.focus();
+
+        return;
+
+    }
+
+
+    const result =
+        getCourseFromCode(
+            accessCode
+        );
+
+
+    if (!result) {
+
+        verifyError.textContent =
+            "رقم الطلب أو رمز الوصول غير صحيح.";
+
+        accessCodeInput.focus();
+
+        return;
+
+    }
+
+
+    if (
+        requestedCourse &&
+        requestedCourse !== result.key
+    ) {
+
+        verifyError.textContent =
+            "رمز الوصول لا يطابق الدورة المختارة.";
+
+        accessCodeInput.focus();
+
+        return;
+
+    }
+
+
+    selectedCourseKey =
+        result.key;
+
+
+    consentCourseTitle.textContent =
+        result.course.title;
+
+
+    verifyScreen.hidden =
+        true;
+
+    consentScreen.hidden =
+        false;
+
+
+    consentCheckbox.checked =
+        false;
+
+    consentButton.disabled =
+        true;
+
+    consentError.textContent =
+        "";
+
+
+    setTimeout(
+        () => {
+            consentCheckbox.focus();
+        },
+        50
+    );
+
 }
 
-themeToggle.addEventListener("click", () => {
-    const dark = !document.body.classList.contains("dark");
-    document.body.classList.toggle("dark", dark);
-    localStorage.setItem("theme", dark ? "dark" : "light");
-    themeToggle.textContent = dark ? "☀️" : "🌙";
-});
 
-applySavedTheme();
-renderCourses();
-window.addEventListener("pageshow", renderCourses);
-window.addEventListener("storage", renderCourses);
+/* =========================================================
+   CONSENT
+========================================================= */
+
+consentCheckbox.addEventListener(
+    "change",
+    () => {
+
+        consentButton.disabled =
+            !consentCheckbox.checked;
+
+        consentError.textContent =
+            "";
+
+    }
+);
+
+
+function acceptConsent() {
+
+    consentError.textContent =
+        "";
+
+
+    if (
+        !consentCheckbox.checked
+    ) {
+
+        consentError.textContent =
+            "يجب الموافقة على الإقرار للمتابعة.";
+
+        return;
+
+    }
+
+
+    if (
+        !selectedCourseKey
+    ) {
+
+        consentError.textContent =
+            "تعذر تحديد الدورة.";
+
+        return;
+
+    }
+
+
+    const course =
+        COURSES[
+            selectedCourseKey
+        ];
+
+
+    saveAccess(
+        selectedCourseKey
+    );
+
+
+    consentScreen.hidden =
+        true;
+
+    loadingScreen.hidden =
+        false;
+
+
+    setTimeout(
+        () => {
+
+            window.location.href =
+                course.url;
+
+        },
+        400
+    );
+
+}
+
+
+/* =========================================================
+   INPUT CLEANUP
+========================================================= */
+
+orderInput.addEventListener(
+    "input",
+    () => {
+
+        orderInput.value =
+            orderInput.value.replace(
+                /\D/g,
+                ""
+            );
+
+        verifyError.textContent =
+            "";
+
+    }
+);
+
+
+accessCodeInput.addEventListener(
+    "input",
+    () => {
+
+        accessCodeInput.value =
+            accessCodeInput.value.replace(
+                /\D/g,
+                ""
+            );
+
+        verifyError.textContent =
+            "";
+
+    }
+);
+
+
+orderInput.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key ===
+            "Enter"
+        ) {
+
+            verifyCustomer();
+
+        }
+
+    }
+);
+
+
+accessCodeInput.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key ===
+            "Enter"
+        ) {
+
+            verifyCustomer();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+verifyButton.addEventListener(
+    "click",
+    verifyCustomer
+);
+
+
+consentButton.addEventListener(
+    "click",
+    acceptConsent
+);
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+function applyTheme() {
+
+    const saved =
+        localStorage.getItem(
+            "theme"
+        );
+
+
+    if (
+        saved ===
+        "dark"
+    ) {
+
+        document.body.classList.add(
+            "dark"
+        );
+
+        themeToggle.textContent =
+            "☀️";
+
+    } else {
+
+        themeToggle.textContent =
+            "🌙";
+
+    }
+
+}
+
+
+themeToggle.addEventListener(
+    "click",
+    () => {
+
+        document.body.classList.toggle(
+            "dark"
+        );
+
+
+        const dark =
+            document.body.classList.contains(
+                "dark"
+            );
+
+
+        localStorage.setItem(
+            "theme",
+            dark
+                ? "dark"
+                : "light"
+        );
+
+
+        themeToggle.textContent =
+            dark
+                ? "☀️"
+                : "🌙";
+
+    }
+);
+
+
+applyTheme();
