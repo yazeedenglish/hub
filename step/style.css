@@ -1277,35 +1277,55 @@ body {
 
 /* Controls container. */
 .video-controls {
-
     display: flex;
-
     align-items: center;
-
     gap: 10px;
-
     padding: 12px 15px;
-
     background: #0B1115;
-
     color: white;
+    direction: ltr;
 }
 
 
 /* Control button. */
 .control-btn {
-
     border: none;
-
     background: transparent;
-
     color: white;
-
-    font-size: 17px;
-
     cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-    padding: 5px;
+.control-btn svg {
+    width: 19px;
+    height: 19px;
+    stroke-width: 2;
+}
+
+.close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.volume-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.volume-btn svg {
+    width: 19px;
+    height: 19px;
+    stroke-width: 2;
 }
 
 
