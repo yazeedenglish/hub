@@ -1,3 +1,26 @@
+// ============================================================
+// Bunny or Video links
+// ============================================================
+
+const BUNNY_CDN = "https://vz-c82b2256-40f.b-cdn.net/";
+const BUNNY_QUALITY = "1080p";
+
+function getVideoUrl(video) {
+    if (!video) return "";
+
+    // If it's already a complete URL, use it normally
+    if (video.startsWith("http")) {
+        return video;
+    }
+
+    // If it's a local video, use it normally
+    if (video.startsWith("videos/")) {
+        return video;
+    }
+
+    // Otherwise, treat it as a Bunny Video ID
+    return BUNNY_CDN + video + "/play_" + BUNNY_QUALITY + ".mp4";
+}
 
 // ============================================================
 // NEW COURSE SECTION
@@ -6,10 +29,10 @@
 const VOCABULARY_LESSONS = [
 
     {
-        title: "Lesson 01",
+        title: "Present Simple",
         description:
-            "وصف الدرس الأول.",
-        video: "videos/grammar.mp4"
+            "زمن المضارع البسيط",
+        video: "11232029-7c4f-4759-9286-ab8bba5dd80f"
     },
 
     {
@@ -87,72 +110,177 @@ const COURSES = [
     {
         title: "Present Simple",
         description:
-            "شرح قاعدة المضارع البسيط واستخداماته الأساسية مع أمثلة تساعدك على فهم أسئلة STEP.",
+            "زمن المضارع البسيط",
         video:
-            "videos/grammar.mp4"
+            "fd28ff08-ed29-41f6-ab23-de6fec1e4aff"
     },
 
     {
         title: "Present Continuous",
         description:
-            "تعلم استخدام المضارع المستمر وكيفية تمييزه في الجمل والأسئلة.",
-        video: "videos/grammar2.mp4"
+            "زمن المضارع المستمر",
+        video: "685428c0-59ce-419b-ade4-5325f0ac3e6b"
+    },
+
+    {
+        title: "Present Perfect",
+        description:
+            "زمن المضارع التام",
+        video: "08441e54-ad72-4949-ad1f-c7d4220b2f18"
+    },
+
+    {
+        title: "Present Perfect Continouos",
+        description:
+            "زمن المضارع التام المستمر",
+        video: "2880257a-bae2-479a-af5c-ac0611cbf017"
+    },
+
+    {
+        title: "Since & For",
+        description:
+            "منذ ولمدة",
+        video: "0903ab05-cbd0-4b87-a426-b9f8d288345d"
     },
 
     {
         title: "Past Simple",
         description:
-            "شرح الماضي البسيط وطريقة تكوين الجمل والأسئلة والنفي.",
-        video: "videos/past-simple.mp4"
+            "زمن الماضي البسيط",
+        video: "0e5891bc-6b50-4e62-acb3-01a9d1cac54c"
     },
 
     {
-        title: "Future",
+        title: "Past Continuous",
         description:
-            "تعرف على أهم طرق التعبير عن المستقبل والأسئلة الشائعة في STEP.",
-        video: "videos/future.mp4"
+            "زمن الماضي المستمر",
+        video: "35340084-6dac-4162-aaa0-94fe902b3295"
     },
 
     {
-        title: "Comparatives",
+        title: "Past Perfect",
         description:
-            "شرح المقارنة بين الأشياء والأشخاص مع أهم القواعد والأخطاء الشائعة.",
-        video: "videos/comparatives.mp4"
+            "زمن الماضي التام",
+        video: "b7e22f76-d8c1-4cde-bc52-84bee1b8416a"
     },
 
     {
-        title: "Superlatives",
+        title: "Future Simple",
         description:
-            "تعلم صيغة التفضيل وكيفية اختيار الإجابة الصحيحة بسرعة.",
-        video: "videos/superlatives.mp4"
+            "زمن المستقبل البسيط",
+        video: "11426d48-8d42-4064-af1f-e7aa8d8e63a5"
     },
 
     {
-        title: "Modal Verbs",
+        title: "Passive Voice",
         description:
-            "شرح الأفعال الناقصة مثل can و should و must بطريقة مناسبة لاختبار STEP.",
-        video: "videos/modal-verbs.mp4"
+            "المبني للمجهول",
+        video: "a29e4e1a-ebc9-46f4-8bd0-2c51e831b9f3"
     },
 
     {
-        title: "Vocabulary",
+        title: "Used to",
         description:
-            "طريقة التعامل مع أسئلة المفردات والمرادفات واختيار الكلمة الأقرب في المعنى.",
-        video: "videos/vocabulary.mp4"
+            "جمل الاعتياد",
+        video: "7c916654-244e-4a50-8473-f3f506c8558d"
     },
 
     {
-        title: "Reading Skills",
+        title: "Time connectors",
         description:
-            "استراتيجيات القراءة والبحث عن الكلمات المفتاحية للوصول إلى الإجابة بسرعة.",
-        video: "videos/reading-skills.mp4"
+            "مسارات الربط",
+        video: "5841aaf5-b786-4a87-b1ac-06622d4b3431"
     },
 
     {
-        title: "Listening Skills",
+        title: "If conditionals",
         description:
-            "استراتيجيات مهمة لفهم المقاطع الصوتية والتركيز على المعلومات التي تقود للإجابة.",
-        video: "videos/listening-skills.mp4"
+            "الجمل الشرطية",
+        video: "879eb402-7c5f-459e-97f7-ab6630c7d874"
+    },
+
+    {
+        title: "Relative Clauses",
+        description:
+            "جمل الوصل",
+        video: "309f7c71-760c-4b6d-8126-988fbc407495"
+    },
+
+    {
+        title: "Pronouns",
+        description:
+            "الضمائر",
+        video: "f508b01e-f422-46fa-b05a-fa08488a02c5"
+    },
+
+    {
+        title: "Countable and Uncountable",
+        description:
+            "الأسماء المعدودة وغير المعدودة",
+        video: "30dd733d-9c84-461b-8d58-b9c185496587"
+    },
+
+    {
+        title: "Quantifiers",
+        description:
+            "الكميات",
+        video: "27c53dd3-2420-4e07-bacb-e4fbc2b1125a"
+    },
+
+    {
+        title: "Singular and Plural",
+        description:
+            "المفرد والجمع",
+        video: "efbe22e4-5d4a-4edb-a3e8-d6d060552708"
+    },
+
+    {
+        title: "Comparative and Superlative",
+        description:
+            "المقارنة والتفضيل",
+        video: "8e73acf1-fc37-49c1-959a-c5131577ef20"
+    },
+
+    {
+        title: "Modals",
+        description:
+            "الأفعال الناقصة",
+        video: "d950963e-4d6d-49aa-b9b2-e15ea769627d"
+    },
+
+    {
+        title: "Connectors",
+        description:
+            "أدوات الربط",
+        video: "2131f81e-4d14-4b82-8cfe-adc86501e8ab"
+    },
+
+    {
+        title: "Prepositions",
+        description:
+            "حروف الجر",
+        video: "890ec693-a6c6-4de5-915a-187c29510965"
+    },
+
+    {
+        title: "Articles",
+        description:
+            "التعريف والتنكير",
+        video: "00708950-f43a-40be-9df4-d687b63bb2bf"
+    },
+
+    {
+        title: "Wh Questions",
+        description:
+            "أدوات الاستفهام",
+        video: "4609c661-a7e2-46dc-b936-ecb1f3274157"
+    },
+
+    {
+        title: "Writing Analysis",
+        description:
+            "تحليل الكتابة",
+        video: "d75086ee-5b18-4e6c-868f-b4f2714142bd"
     }
 
 ];
@@ -378,6 +506,12 @@ const videoPlaceholder =
 
 const playBtn =
     document.getElementById("playBtn");
+
+const backwardBtn =
+    document.getElementById("backwardBtn");
+
+const forwardBtn =
+    document.getElementById("forwardBtn");
 
 const progressBar =
     document.getElementById("progressBar");
@@ -682,7 +816,7 @@ function openCourse(index) {
     courseVideo.pause();
 
     courseVideo.src =
-        course.video;
+    getVideoUrl(course.video);
 
     courseVideo.load();
 
@@ -742,7 +876,7 @@ function openVocabularyLesson(
     courseVideo.pause();
 
     courseVideo.src =
-        lesson.video;
+    getVideoUrl(lesson.video);
 
     courseVideo.load();
 
@@ -805,7 +939,7 @@ function openQuestion(
     courseVideo.pause();
 
     courseVideo.src =
-        question.video;
+    getVideoUrl(question.video);
 
     courseVideo.load();
 
@@ -1080,6 +1214,57 @@ courseVideo.addEventListener(
 
     }
 );
+
+// ============================================================
+// 10 SECONDS BACKWARD
+// ============================================================
+
+if (backwardBtn) {
+
+    backwardBtn.addEventListener(
+        "click",
+        () => {
+
+            if (!Number.isFinite(courseVideo.duration)) {
+                return;
+            }
+
+            courseVideo.currentTime =
+                Math.max(
+                    0,
+                    courseVideo.currentTime - 10
+                );
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// 10 SECONDS FORWARD
+// ============================================================
+
+if (forwardBtn) {
+
+    forwardBtn.addEventListener(
+        "click",
+        () => {
+
+            if (!Number.isFinite(courseVideo.duration)) {
+                return;
+            }
+
+            courseVideo.currentTime =
+                Math.min(
+                    courseVideo.duration,
+                    courseVideo.currentTime + 10
+                );
+
+        }
+    );
+
+}
 
 
 // ============================================================
@@ -1513,3 +1698,5 @@ renderCoursesForSection(
     VOCABULARY_LESSONS,
     "vocabularyGrid"
 );
+
+lucide.createIcons();
