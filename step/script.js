@@ -1209,8 +1209,8 @@ courseVideo.addEventListener(
     "play",
     () => {
 
-        playBtn.textContent =
-            "❚❚";
+       playBtn.innerHTML = '<i data-lucide="pause"></i>';
+lucide.createIcons();
 
     }
 );
@@ -1275,8 +1275,8 @@ courseVideo.addEventListener(
     "pause",
     () => {
 
-        playBtn.textContent =
-            "▶";
+       playBtn.innerHTML = '<i data-lucide="play"></i>';
+lucide.createIcons();
 
     }
 );
@@ -1386,8 +1386,57 @@ if (progressBar) {
 
 
 // ============================================================
-// VOLUME
+// VOLUME + MUTE / UNMUTE
 // ============================================================
+
+const volumeBtn =
+    document.getElementById("volumeBtn");
+
+let previousVolume = 1;
+
+
+// ------------------------------------------------------------
+// UPDATE VOLUME ICON
+// ------------------------------------------------------------
+
+function updateVolumeIcon() {
+
+    if (!volumeBtn) {
+        return;
+    }
+
+    let iconName;
+
+    if (
+        courseVideo.muted ||
+        courseVideo.volume === 0
+    ) {
+
+        iconName = "volume-x";
+
+    } else if (
+        courseVideo.volume < 0.5
+    ) {
+
+        iconName = "volume-1";
+
+    } else {
+
+        iconName = "volume-2";
+
+    }
+
+    volumeBtn.innerHTML =
+        `<i data-lucide="${iconName}"></i>`;
+
+    lucide.createIcons();
+
+}
+
+
+// ------------------------------------------------------------
+// VOLUME SLIDER
+// ------------------------------------------------------------
 
 if (volumeBar) {
 
@@ -1395,15 +1444,75 @@ if (volumeBar) {
         "input",
         () => {
 
+            const newVolume =
+                Number(volumeBar.value);
+
             courseVideo.volume =
-                Number(
-                    volumeBar.value
-                );
+                newVolume;
+
+            // If volume is increased from zero,
+            // automatically unmute.
+            if (newVolume > 0) {
+                courseVideo.muted = false;
+            }
+
+            // Save the latest non-zero volume.
+            if (newVolume > 0) {
+                previousVolume = newVolume;
+            }
+
+            updateVolumeIcon();
 
         }
     );
 
 }
+
+
+// ------------------------------------------------------------
+// MUTE / UNMUTE BUTTON
+// ------------------------------------------------------------
+
+if (volumeBtn) {
+
+    volumeBtn.addEventListener(
+        "click",
+        () => {
+
+            if (courseVideo.muted) {
+
+                // UNMUTE
+                courseVideo.muted = false;
+
+                courseVideo.volume =
+                    previousVolume || 1;
+
+                volumeBar.value =
+                    courseVideo.volume;
+
+            } else {
+
+                // MUTE
+                previousVolume =
+                    courseVideo.volume || 1;
+
+                courseVideo.muted = true;
+
+            }
+
+            updateVolumeIcon();
+
+        }
+    );
+
+}
+
+
+// ------------------------------------------------------------
+// INITIAL VOLUME ICON
+// ------------------------------------------------------------
+
+updateVolumeIcon();
 
 
 // ============================================================
