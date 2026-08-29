@@ -21,6 +21,8 @@
     <!-- This connects our external CSS file. -->
     <link rel="stylesheet" href="style.css">
 
+    <script src="https://unpkg.com/lucide@latest"></script>
+
 </head>
 
 
@@ -374,96 +376,107 @@
             </div>
 
 
-            <!-- Custom video controls. -->
             <div class="video-controls">
 
-
-                <!-- Play button. -->
-                <button
-                    id="playBtn"
-                    class="control-btn"
-                >
-                    ▶
-                </button>
-
-
-                <!-- Current video time. -->
-                <span id="currentTime">
-                    00:00
-                </span>
+    <!-- Play / Pause -->
+    <button
+        id="playBtn"
+        class="control-btn play-control"
+        title="تشغيل / إيقاف"
+    >
+        ▶
+    </button>
 
 
-                <!-- Progress bar. -->
-                <input
-                    id="progressBar"
-                    class="progress-bar"
-                    type="range"
-                    min="0"
-                    max="100"
-                    value="0"
-                >
+    <button class="control-btn skip-btn" id="backwardBtn" title="رجوع">
+    <i data-lucide="rotate-cw"></i>
+    <span></span>
+</button>
+
+<button class="control-btn skip-btn" id="forwardBtn" title="تقديم">
+    <i data-lucide="rotate-ccw"></i>
+    <span></span>
+</button>
 
 
-                <!-- Total video time. -->
-                <span id="durationTime">
-                    00:00
-                </span>
+    <!-- Current video time -->
+    <span id="currentTime" class="time-display">
+        00:00
+    </span>
 
 
-                <!-- Volume slider. -->
-                <span class="volume-icon">
-                    
-                </span>
-
-                <input
-                    id="volumeBar"
-                    class="volume-bar"
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    value="1"
-                >
+    <!-- Progress bar -->
+    <input
+        id="progressBar"
+        class="progress-bar"
+        type="range"
+        min="0"
+        max="100"
+        value="0"
+    >
 
 
-                <!-- Playback speed. -->
-                <select
-                    id="speedSelect"
-                    class="speed-select"
-                >
-
-                    <option value="0.75">
-                        0.75×
-                    </option>
-
-                    <option value="1" selected>
-                        1×
-                    </option>
-
-                    <option value="1.25">
-                        1.25×
-                    </option>
-
-                    <option value="1.5">
-                        1.5×
-                    </option>
-
-                    <option value="2">
-                        2×
-                    </option>
-
-                </select>
+    <!-- Total video time -->
+    <span id="durationTime" class="time-display">
+        00:00
+    </span>
 
 
-                <!-- Fullscreen button. -->
-                <button
-                    id="fullscreenBtn"
-                    class="control-btn"
-                >
-                    ⛶
-                </button>
+    <!-- Volume -->
+    <span class="volume-icon">
+        🔊
+    </span>
 
-            </div>
+    <input
+        id="volumeBar"
+        class="volume-bar"
+        type="range"
+        min="0"
+        max="1"
+        step="0.01"
+        value="1"
+    >
+
+
+    <!-- Playback speed -->
+    <select
+        id="speedSelect"
+        class="speed-select"
+    >
+
+        <option value="0.75">
+            0.75×
+        </option>
+
+        <option value="1" selected>
+            1×
+        </option>
+
+        <option value="1.25">
+            1.25×
+        </option>
+
+        <option value="1.5">
+            1.5×
+        </option>
+
+        <option value="2">
+            2×
+        </option>
+
+    </select>
+
+
+    <!-- Fullscreen -->
+    <button
+        id="fullscreenBtn"
+        class="control-btn fullscreen-control"
+        title="ملء الشاشة"
+    >
+        ⛶
+    </button>
+
+</div>
 
 
             <!-- Lesson information. -->
