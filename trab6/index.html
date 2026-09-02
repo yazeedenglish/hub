@@ -338,8 +338,14 @@
     </div>
 
     
-    <script src="../access-guard.js"></script>
-    <script type="module" src="script.js"></script>
+<!-- Check if the customer owns the Trab6 course -->
+<script src="../access.js"></script>
+
+<script>
+    checkCourseAccess("trab6");
+</script>
+
+<script type="module" src="script.js"></script>
 
 </body>
 
