@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Yazeed English — دخول الدورات</title>
+
+</head>
+
+
+<body>
+
+    <main>
+
+        <h1>Yazeed English</h1>
+
+        <h2>الوصول إلى دوراتك</h2>
+
+        <p>
+            أدخل رقم الطلب للوصول إلى الدورات التي اشتريتها.
+        </p>
+
+
+        <form id="accessForm">
+
+            <label for="orderNumber">
+                رقم الطلب
+            </label>
+
+            <input
+                type="text"
+                id="orderNumber"
+                name="orderNumber"
+                placeholder="أدخل رقم الطلب"
+                autocomplete="off"
+                required
+            >
+
+
+            <label>
+
+                <input
+                    type="checkbox"
+                    id="consent"
+                    required
+                >
+
+                أتعهد بعدم مشاركة أو تسريب محتوى الدورات
+                أو بيانات الوصول الخاصة بي مع الآخرين.
+
+            </label>
+
+
+            <button
+                type="submit"
+            >
+                متابعة
+            </button>
+
+        </form>
+
+
+        <p id="message"></p>
+
+    </main>
+
+
+    <script src="activate.js"></script>
+
+</body>
+
+</html>
