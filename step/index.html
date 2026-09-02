@@ -544,9 +544,14 @@
 
 
 
-    <!-- This connects our JavaScript file. -->
-    <script src="../access-guard.js"></script>
-    <script type="module" src="script.js"></script>
+    <!-- Check if the customer owns the STEP course -->
+<script src="../access.js"></script>
+
+<script>
+    checkCourseAccess("step");
+</script>
+
+<script type="module" src="script.js"></script>
 
 </body>
 

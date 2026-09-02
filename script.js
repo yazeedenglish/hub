@@ -4,13 +4,6 @@
 
 const STORE_URL = "https://yazeedenglish.com";
 
-const ACCESS_PREFIX =
-    "yazeed_course_access_";
-
-const ACCESS_DURATION =
-    30 * 24 * 60 * 60 * 1000;
-
-
 /* =========================================================
    COURSES
 ========================================================= */
@@ -26,9 +19,6 @@ const COURSES = {
             "دورة STEP لتطوير مهاراتك والاستعداد للاختبار.",
 
         url: "/step",
-
-        activateUrl:
-            "/activate?course=step",
 
         purchaseUrl:
             STORE_URL,
@@ -51,9 +41,6 @@ const COURSES = {
 
         url: "/course",
 
-        activateUrl:
-            "/activate?course=english",
-
         purchaseUrl:
             STORE_URL,
 
@@ -74,9 +61,6 @@ const COURSES = {
             "الوصول إلى محتوى Trab6 التفاعلي.",
 
         url: "/trab6",
-
-        activateUrl:
-            "/activate?course=trab6",
 
         purchaseUrl:
             STORE_URL,
@@ -99,9 +83,6 @@ const COURSES = {
 
         url: "/writing",
 
-        activateUrl:
-            "/activate?course=writing",
-
         purchaseUrl:
             STORE_URL,
 
@@ -113,139 +94,6 @@ const COURSES = {
     }
 
 };
-
-
-/* =========================================================
-   ACCESS HELPERS
-========================================================= */
-
-function getAccessKey(courseKey) {
-
-    return (
-        ACCESS_PREFIX +
-        courseKey
-    );
-
-}
-
-
-function getCourseAccess(courseKey) {
-
-    const raw =
-        localStorage.getItem(
-            getAccessKey(courseKey)
-        );
-
-    if (!raw) {
-        return null;
-    }
-
-
-    try {
-
-        const access =
-            JSON.parse(raw);
-
-
-        if (
-            !access ||
-            typeof access.expiresAt !==
-                "number" ||
-            access.consentAccepted !==
-                true
-        ) {
-
-            localStorage.removeItem(
-                getAccessKey(courseKey)
-            );
-
-            return null;
-
-        }
-
-
-        if (
-            Date.now() >=
-            access.expiresAt
-        ) {
-
-            localStorage.removeItem(
-                getAccessKey(courseKey)
-            );
-
-            return null;
-
-        }
-
-
-        return access;
-
-    } catch (error) {
-
-        localStorage.removeItem(
-            getAccessKey(courseKey)
-        );
-
-        return null;
-
-    }
-
-}
-
-
-/* =========================================================
-   COURSE STATE
-========================================================= */
-
-function getCourseState(courseKey) {
-
-    const access =
-        getCourseAccess(courseKey);
-
-
-    if (access) {
-        return "active";
-    }
-
-
-    const raw =
-        localStorage.getItem(
-            getAccessKey(courseKey)
-        );
-
-
-    if (raw) {
-
-        try {
-
-            const saved =
-                JSON.parse(raw);
-
-            if (
-                saved &&
-                typeof saved.expiresAt ===
-                    "number" &&
-                Date.now() >=
-                    saved.expiresAt
-            ) {
-
-                return "expired";
-
-            }
-
-        } catch {
-
-            return "locked";
-
-        }
-
-    }
-
-
-    return "locked";
-
-}
-
 
 /* =========================================================
    IMAGE
@@ -308,74 +156,85 @@ function createCourseImage(course) {
 
 }
 
-
-/* =========================================================
-   RENDER
-========================================================= */
-
 function renderCourses() {
 
     const courseGrid =
-        document.getElementById(
-            "courseGrid"
-        );
-
+        document.getElementById("courseGrid");
 
     courseGrid.innerHTML = "";
 
+    /* -----------------------------------------
+       GET SAVED ACCESS
+    ----------------------------------------- */
 
-    Object.values(
-        COURSES
-    ).forEach(
-        (course, index) => {
+    const savedAccess =
+        localStorage.getItem(
+            "yazeed_current_access"
+        );
 
-            const state =
-                getCourseState(
-                    course.key
-                );
+    let access = null;
 
+    if (savedAccess) {
+
+        try {
+            access =
+                JSON.parse(savedAccess);
+
+        } catch (error) {
+
+            console.error(
+                "Invalid access data:",
+                error
+            );
+
+            localStorage.removeItem(
+                "yazeed_current_access"
+            );
+        }
+    }
+
+    /* -----------------------------------------
+       RENDER COURSES
+    ----------------------------------------- */
+
+    Object.values(COURSES).forEach(
+        function (course, index) {
+
+            const isActive =
+                access &&
+                access.products &&
+                access.products[course.key] === true;
 
             const card =
-                document.createElement(
-                    "article"
-                );
+                document.createElement("article");
 
             card.className =
                 "course-card";
 
-
             card.style.animationDelay =
                 `${index * 70}ms`;
 
+            /* -----------------------------------------
+               IMAGE
+            ----------------------------------------- */
 
             const imageWrap =
-                createCourseImage(
-                    course
-                );
-
+                createCourseImage(course);
 
             /* -----------------------------------------
                LOCK
             ----------------------------------------- */
 
-            if (
-                state !==
-                "active"
-            ) {
+            if (!isActive) {
 
                 const overlay =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
                 overlay.className =
                     "course-lock-overlay";
 
-
                 const lock =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
                 lock.className =
                     "course-lock";
@@ -383,75 +242,52 @@ function renderCourses() {
                 lock.textContent =
                     "🔒";
 
-
-                overlay.appendChild(
-                    lock
-                );
+                overlay.appendChild(lock);
 
                 imageWrap.appendChild(
                     overlay
                 );
-
             }
-
 
             /* -----------------------------------------
                BODY
             ----------------------------------------- */
 
             const body =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
             body.className =
                 "course-body";
 
-
             const status =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
             status.className =
                 "course-status";
 
-
             const title =
-                document.createElement(
-                    "h3"
-                );
+                document.createElement("h3");
 
             title.textContent =
                 course.title;
 
-
             const description =
-                document.createElement(
-                    "p"
-                );
+                document.createElement("p");
 
             description.textContent =
                 course.description;
 
-
             const actions =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
             actions.className =
                 "course-actions";
 
-
             /* -----------------------------------------
-               ACTIVE
+               ACTIVE COURSE
             ----------------------------------------- */
 
-            if (
-                state ===
-                "active"
-            ) {
+            if (isActive) {
 
                 status.classList.add(
                     "active"
@@ -460,11 +296,8 @@ function renderCourses() {
                 status.innerHTML =
                     "✓ <span>الوصول مفعّل</span>";
 
-
                 const enter =
-                    document.createElement(
-                        "a"
-                    );
+                    document.createElement("a");
 
                 enter.className =
                     "course-btn primary";
@@ -475,55 +308,14 @@ function renderCourses() {
                 enter.textContent =
                     "دخول الدورة";
 
-
                 actions.appendChild(
                     enter
                 );
 
             }
 
-
             /* -----------------------------------------
-               EXPIRED
-            ----------------------------------------- */
-
-            else if (
-                state ===
-                "expired"
-            ) {
-
-                status.classList.add(
-                    "expired"
-                );
-
-                status.innerHTML =
-                    "⏱ <span>انتهت الصلاحية</span>";
-
-
-                const reactivate =
-                    document.createElement(
-                        "a"
-                    );
-
-                reactivate.className =
-                    "course-btn primary";
-
-                reactivate.href =
-                    course.activateUrl;
-
-                reactivate.textContent =
-                    "إعادة التفعيل";
-
-
-                actions.appendChild(
-                    reactivate
-                );
-
-            }
-
-
-            /* -----------------------------------------
-               LOCKED
+               LOCKED COURSE
             ----------------------------------------- */
 
             else {
@@ -531,26 +323,20 @@ function renderCourses() {
                 status.innerHTML =
                     "🔒 <span>غير مفعّلة</span>";
 
-
                 const activate =
-                    document.createElement(
-                        "a"
-                    );
+                    document.createElement("a");
 
                 activate.className =
                     "course-btn secondary";
 
                 activate.href =
-                    course.activateUrl;
+                    "/activate.html";
 
                 activate.textContent =
                     "تفعيل الوصول";
 
-
                 const purchase =
-                    document.createElement(
-                        "a"
-                    );
+                    document.createElement("a");
 
                 purchase.className =
                     "course-btn primary";
@@ -567,7 +353,6 @@ function renderCourses() {
                 purchase.innerHTML =
                     "اشتر الآن <span>↗</span>";
 
-
                 actions.appendChild(
                     activate
                 );
@@ -575,45 +360,28 @@ function renderCourses() {
                 actions.appendChild(
                     purchase
                 );
-
             }
 
+            /* -----------------------------------------
+               APPEND
+            ----------------------------------------- */
 
-            body.appendChild(
-                status
-            );
+            body.appendChild(status);
 
-            body.appendChild(
-                title
-            );
+            body.appendChild(title);
 
-            body.appendChild(
-                description
-            );
+            body.appendChild(description);
 
-            body.appendChild(
-                actions
-            );
+            body.appendChild(actions);
 
+            card.appendChild(imageWrap);
 
-            card.appendChild(
-                imageWrap
-            );
+            card.appendChild(body);
 
-            card.appendChild(
-                body
-            );
-
-
-            courseGrid.appendChild(
-                card
-            );
-
+            courseGrid.appendChild(card);
         }
     );
-
 }
-
 
 /* =========================================================
    THEME
