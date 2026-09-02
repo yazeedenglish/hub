@@ -1,1 +1,884 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Yazeed English — Admin</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #111827;
+        }
+
+        /* ==============================
+           HEADER
+        ============================== */
+
+        header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 18px 30px;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .admin-label {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+
+        /* ==============================
+           MAIN
+        ============================== */
+
+        main {
+            width: min(1200px, 94%);
+            margin: 30px auto 60px;
+        }
+
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            margin: 0 0 6px;
+            font-size: 30px;
+        }
+
+        .page-title p {
+            margin: 0;
+            color: #6b7280;
+        }
+
+
+        /* ==============================
+           STAT CARDS
+        ============================== */
+
+        .stats {
+            display: grid;
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .stat-title {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+
+        /* ==============================
+           CARD
+        ============================== */
+
+        .card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+
+        /* ==============================
+           CONTROLS
+        ============================== */
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+
+            font-size: 15px;
+            background: white;
+        }
+
+
+        /* ==============================
+           BUTTONS
+        ============================== */
+
+        button {
+            border: none;
+            border-radius: 9px;
+
+            padding: 12px 18px;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        .primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .primary:hover {
+            background: #1d4ed8;
+        }
+
+        .secondary {
+            background: #eef2ff;
+            color: #3730a3;
+        }
+
+        .danger {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+
+        /* ==============================
+           TABLE
+        ============================== */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th,
+        td {
+            padding: 15px 12px;
+            text-align: right;
+
+            border-bottom:
+                1px solid #e5e7eb;
+        }
+
+        th {
+            color: #6b7280;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+
+        /* ==============================
+           BADGES
+        ============================== */
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+
+            padding: 5px 9px;
+
+            border-radius: 999px;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .course-badge {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+
+        /* ==============================
+           ACTIONS
+        ============================== */
+
+        .actions {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .actions button {
+            padding: 7px 10px;
+            font-size: 12px;
+        }
+
+
+        /* ==============================
+           EMPTY STATE
+        ============================== */
+
+        .empty {
+            text-align: center;
+            padding: 45px 20px;
+            color: #6b7280;
+        }
+
+
+        /* ==============================
+           CREATE ORDER MODAL
+        ============================== */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+
+            background: rgba(0, 0, 0, 0.45);
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            z-index: 1000;
+        }
+
+        .modal {
+            width: min(500px, 100%);
+
+            background: white;
+            border-radius: 18px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close-btn {
+            background: #f3f4f6;
+            color: #374151;
+
+            width: 35px;
+            height: 35px;
+
+            padding: 0;
+
+            font-size: 20px;
+        }
+
+
+        /* ==============================
+           FORM
+        ============================== */
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+
+            font-weight: 700;
+
+            margin-bottom: 8px;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .product-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            padding: 13px;
+
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+
+            cursor: pointer;
+        }
+
+        .product-option input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .modal-footer button {
+            flex: 1;
+        }
+
+
+        /* ==============================
+           MOBILE
+        ============================== */
+
+        @media (max-width: 900px) {
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 16px;
+            }
+
+            main {
+                width: 94%;
+                margin-top: 20px;
+            }
+
+            .page-title h1 {
+                font-size: 25px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .products {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================
+         HEADER
+    ========================================= -->
+
+    <header>
+
+        <div class="header-inner">
+
+            <div class="brand">
+                Yazeed English
+            </div>
+
+            <div class="admin-label">
+                لوحة تحكم الإدارة
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================
+         MAIN
+    ========================================= -->
+
+    <main>
+
+
+        <div class="page-title">
+
+            <h1>
+                لوحة التحكم
+            </h1>
+
+            <p>
+                إدارة طلبات العملاء وصلاحيات الدورات
+            </p>
+
+        </div>
+
+
+
+        <!-- =====================================
+             STATISTICS
+        ====================================== -->
+
+        <section class="stats">
+
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    إجمالي الطلبات
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="totalOrders"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    STEP
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="stepCount"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    English
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="englishCount"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    Trab6
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="trab6Count"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    Writing
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="writingCount"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =====================================
+             ORDERS
+        ====================================== -->
+
+        <section class="card">
+
+
+            <div class="card-header">
+
+                <h2>
+                    الطلبات
+                </h2>
+
+                <button
+                    class="primary"
+                    id="openCreateBtn"
+                >
+                    + إنشاء طلب
+                </button>
+
+            </div>
+
+
+
+            <!-- CONTROLS -->
+
+            <div class="controls">
+
+
+                <div class="search-box">
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="ابحث برقم الطلب..."
+                    >
+
+                </div>
+
+
+                <div style="min-width: 180px;">
+
+                    <select id="productFilter">
+
+                        <option value="all">
+                            جميع الدورات
+                        </option>
+
+                        <option value="step">
+                            STEP
+                        </option>
+
+                        <option value="english">
+                            English
+                        </option>
+
+                        <option value="trab6">
+                            Trab6
+                        </option>
+
+                        <option value="writing">
+                            Writing
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div style="min-width: 160px;">
+
+                    <select id="statusFilter">
+
+                        <option value="all">
+                            جميع الحالات
+                        </option>
+
+                        <option value="active">
+                            نشط
+                        </option>
+
+                        <option value="inactive">
+                            غير نشط
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- TABLE -->
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                رقم الطلب
+                            </th>
+
+                            <th>
+                                الدورات
+                            </th>
+
+                            <th>
+                                الحالة
+                            </th>
+
+                            <th>
+                                الإجراءات
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="ordersTableBody">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div
+                class="empty"
+                id="emptyState"
+                style="display: none;"
+            >
+                لا توجد طلبات مطابقة.
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =========================================
+         CREATE / EDIT MODAL
+    ========================================= -->
+
+    <div
+        class="modal-overlay"
+        id="modalOverlay"
+    >
+
+        <div class="modal">
+
+
+            <div class="modal-header">
+
+                <h2 id="modalTitle">
+                    إنشاء طلب جديد
+                </h2>
+
+                <button
+                    class="close-btn"
+                    id="closeModalBtn"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label for="modalOrderNumber">
+                    رقم الطلب
+                </label>
+
+                <input
+                    type="text"
+                    id="modalOrderNumber"
+                    placeholder="أدخل رقم الطلب"
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label>
+                    الدورات المسموح بها
+                </label>
+
+
+                <div class="products">
+
+
+                    <label class="product-option">
+
+                        <input
+                            type="checkbox"
+                            id="modalStep"
+                        >
+
+                        <span>
+                            STEP
+                        </span>
+
+                    </label>
+
+
+                    <label class="product-option">
+
+                        <input
+                            type="checkbox"
+                            id="modalEnglish"
+                        >
+
+                        <span>
+                            English
+                        </span>
+
+                    </label>
+
+
+                    <label class="product-option">
+
+                        <input
+                            type="checkbox"
+                            id="modalTrab6"
+                        >
+
+                        <span>
+                            Trab6
+                        </span>
+
+                    </label>
+
+
+                    <label class="product-option">
+
+                        <input
+                            type="checkbox"
+                            id="modalWriting"
+                        >
+
+                        <span>
+                            Writing
+                        </span>
+
+                    </label>
+
+
+                </div>
+
+            </div>
+
+
+
+            <div class="modal-footer">
+
+                <button
+                    class="secondary"
+                    id="cancelModalBtn"
+                >
+                    إلغاء
+                </button>
+
+                <button
+                    class="primary"
+                    id="saveOrderBtn"
+                >
+                    حفظ الطلب
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <script src="admin.js"></script>
+
+</body>
+
+</html>
