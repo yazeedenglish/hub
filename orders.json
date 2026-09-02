@@ -1,7 +1,7 @@
 {
   "orders": {
     "TEST123": {
-      "step": false,
+      "step": true,
       "english": false,
       "trab6": false,
       "writing": false
