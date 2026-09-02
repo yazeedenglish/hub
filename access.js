@@ -2,24 +2,25 @@
    YAZEED ENGLISH — SIMPLE COURSE ACCESS CHECK
 ========================================================= */
 
-function checkCourseAccess(courseKey) {
+async function checkCourseAccess(courseKey) {
+
+    /* -----------------------------------------
+       GET SAVED ORDER
+    ----------------------------------------- */
 
     const savedAccess =
         localStorage.getItem(
             "yazeed_current_access"
         );
 
-    /* -----------------------------------------
-       NO ACCESS DATA
-    ----------------------------------------- */
-
     if (!savedAccess) {
-        window.location.href = "/activate.html";
+        window.location.href =
+            "/activate.html";
         return false;
     }
 
     /* -----------------------------------------
-       READ ACCESS DATA
+       READ SAVED DATA
     ----------------------------------------- */
 
     let access;
@@ -47,26 +48,123 @@ function checkCourseAccess(courseKey) {
     }
 
     /* -----------------------------------------
-       CHECK PRODUCT
+       GET THE LATEST ORDERS.JSON
     ----------------------------------------- */
 
-    if (
-        !access.products ||
-        access.products[courseKey] !== true
-    ) {
+    try {
 
-        alert(
-            "ليس لديك وصول إلى هذه الدورة."
+        const response =
+            await fetch(
+                "/orders.json?time=" +
+                Date.now()
+            );
+
+        if (!response.ok) {
+            throw new Error(
+                "Could not load orders.json"
+            );
+        }
+
+        const data =
+            await response.json();
+
+        /* -----------------------------------------
+           FIND CUSTOMER ORDER
+        ----------------------------------------- */
+
+        const order =
+            data.orders[
+                access.orderNumber
+            ];
+
+        if (!order) {
+
+            localStorage.removeItem(
+                "yazeed_current_access"
+            );
+
+            window.location.href =
+                "/activate.html";
+
+            return false;
+        }
+
+        /* -----------------------------------------
+           CHECK CURRENT PRODUCT
+        ----------------------------------------- */
+
+        if (
+            order[courseKey] !== true
+        ) {
+
+            alert(
+                "ليس لديك وصول إلى هذه الصفحة"
+            );
+
+            /* Update saved permissions */
+            access.products = {
+                step:
+                    order.step === true,
+
+                english:
+                    order.english === true,
+
+                trab6:
+                    order.trab6 === true,
+
+                writing:
+                    order.writing === true
+            };
+
+            localStorage.setItem(
+                "yazeed_current_access",
+                JSON.stringify(access)
+            );
+
+            window.location.href =
+                "/";
+
+            return false;
+        }
+
+        /* -----------------------------------------
+           UPDATE LOCALSTORAGE
+           WITH LATEST PERMISSIONS
+        ----------------------------------------- */
+
+        access.products = {
+            step:
+                order.step === true,
+
+            english:
+                order.english === true,
+
+            trab6:
+                order.trab6 === true,
+
+            writing:
+                order.writing === true
+        };
+
+        localStorage.setItem(
+            "yazeed_current_access",
+            JSON.stringify(access)
         );
 
-        window.location.href = "/";
+        /* -----------------------------------------
+           ACCESS APPROVED
+        ----------------------------------------- */
+
+        return true;
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            "تعذر التحقق من صلاحية الوصول. يرجى المحاولة مرة أخرى."
+        );
 
         return false;
     }
-
-    /* -----------------------------------------
-       ACCESS APPROVED
-    ----------------------------------------- */
-
-    return true;
 }
