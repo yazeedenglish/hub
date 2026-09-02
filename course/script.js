@@ -39,7 +39,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc =
    غيّر هذا المسار فقط إذا أردت فتح ملف PDF آخر.
 ========================================================= */
 
-const PDF_FILE = "pdfs/Englishbook.pdf";
+const PDF_FILE = "pdfs/vocab.pdf";
 
 
 /* =========================================================
