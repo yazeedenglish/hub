@@ -78,12 +78,100 @@ form.addEventListener(
             }
 
 
-            message.textContent =
-                "تم العثور على الطلب بنجاح.";
+            const products = [];
 
-            console.log(
-                "Order:",
-                order
+
+            if (order.step === true) {
+
+                products.push("STEP Course");
+
+            }
+
+
+            if (order.english === true) {
+
+                products.push("English Course");
+
+            }
+
+
+            if (order.trab6 === true) {
+
+                products.push("Trab6");
+
+            }
+
+
+            if (order.writing === true) {
+
+                products.push("Writing");
+
+            }
+
+
+            if (products.length === 0) {
+
+                message.textContent =
+                    "هذا الطلب لا يحتوي على أي دورات مفعّلة.";
+
+                return;
+
+            }
+
+
+            message.innerHTML = "";
+
+
+            const title =
+                document.createElement("h3");
+
+            title.textContent =
+                "الدورات المتاحة لك:";
+
+
+            message.appendChild(title);
+
+
+            const list =
+                document.createElement("ul");
+
+
+            products.forEach(
+                function (product) {
+
+                    const item =
+                        document.createElement("li");
+
+                    item.textContent =
+                        "✓ " + product;
+
+                    list.appendChild(item);
+
+                }
+            );
+
+
+            message.appendChild(list);
+
+
+            const continueButton =
+                document.createElement("a");
+
+            continueButton.href =
+                "/";
+
+            continueButton.textContent =
+                "متابعة إلى مركز الدورات";
+
+            continueButton.style.display =
+                "inline-block";
+
+            continueButton.style.marginTop =
+                "20px";
+
+
+            message.appendChild(
+                continueButton
             );
 
 
