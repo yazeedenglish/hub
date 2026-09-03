@@ -1,11 +1,17 @@
+<<<<<<< HEAD
 // ============================================================
-// Bunny or Video links
+// Bunny Video links
 // ============================================================
 
 const BUNNY_CDN = "https://vz-c82b2256-40f.b-cdn.net/";
-const BUNNY_QUALITY = "1080p";
+
+// Remember which Bunny video is currently playing
+let currentBunnyVideoId = "";
+let tried720p = false;
+
 
 function getVideoUrl(video) {
+
     if (!video) return "";
 
     // If it's already a complete URL, use it normally
@@ -19,8 +25,34 @@ function getVideoUrl(video) {
     }
 
     // Otherwise, treat it as a Bunny Video ID
-    return BUNNY_CDN + video + "/play_" + BUNNY_QUALITY + ".mp4";
+    currentBunnyVideoId = video;
+    tried720p = false;
+
+    // Always try 1080p first
+    return BUNNY_CDN + video + "/play_1080p.mp4";
 }
+
+// ============================================================
+// LOAD VIDEO
+// ============================================================
+
+function loadVideo(video) {
+
+    if (!video) {
+        courseVideo.removeAttribute("src");
+        return;
+    }
+
+    tried720p = false;
+
+    const url = getVideoUrl(video);
+
+    courseVideo.src = url;
+    courseVideo.load();
+
+}
+=======
+>>>>>>> aa79a7308a92b878e84bb0b4eb83c1d3cb6566ce
 
 // ============================================================
 // NEW COURSE SECTION
@@ -29,74 +61,32 @@ function getVideoUrl(video) {
 const VOCABULARY_LESSONS = [
 
     {
-        title: "Present Simple",
-        description:
-            "زمن المضارع البسيط",
-        video: "11232029-7c4f-4759-9286-ab8bba5dd80f"
+        title: "Course introduction",
+        description: "مقدمة الدورة",
+        video:
+            "95b4b260-436d-4800-9a4e-383cbe94c414"
     },
 
     {
-        title: "Lesson 02",
-        description:
-            "وصف الدرس الثاني.",
-        video: "videos/lesson-02.mp4"
+        title: "Vocabulary Part 1",
+        description: "المفردات الجزء الأول",
+        video:
+            "c7cdba87-5c98-42d0-9610-aff5d4f26e84"
     },
 
     {
-        title: "Lesson 03",
-        description:
-            "وصف الدرس الثالث.",
-        video: "videos/lesson-03.mp4"
+        title: "Vocabulary Part 2",
+        description: "المفردات الجزء الثاني",
+        video:
+            "8f13ba4f-a7fc-464b-929f-521057eb497e"
     },
 
     {
-        title: "Lesson 04",
-        description:
-            "وصف الدرس الرابع.",
-        video: "videos/lesson-04.mp4"
+        title: "Vocabulary Part 3",
+        description: "المفردات الجزء الثالث",
+        video:
+            "172fcac5-8c89-431e-9114-0750a5107154"
     },
-
-    {
-        title: "Lesson 05",
-        description:
-            "وصف الدرس الخامس.",
-        video: "videos/lesson-05.mp4"
-    },
-
-    {
-        title: "Lesson 06",
-        description:
-            "وصف الدرس السادس.",
-        video: "videos/lesson-06.mp4"
-    },
-
-    {
-        title: "Lesson 07",
-        description:
-            "وصف الدرس السابع.",
-        video: "videos/lesson-07.mp4"
-    },
-
-    {
-        title: "Lesson 08",
-        description:
-            "وصف الدرس الثامن.",
-        video: "videos/lesson-08.mp4"
-    },
-
-    {
-        title: "Lesson 09",
-        description:
-            "وصف الدرس التاسع.",
-        video: "videos/lesson-09.mp4"
-    },
-
-    {
-        title: "Lesson 10",
-        description:
-            "وصف الدرس العاشر.",
-        video: "videos/lesson-10.mp4"
-    }
 
 ];
 
@@ -281,6 +271,78 @@ const COURSES = [
         description:
             "تحليل الكتابة",
         video: "d75086ee-5b18-4e6c-868f-b4f2714142bd"
+    },
+                // 1-9
+    {
+        title: "Questions Part 1",
+        description:
+            "اسئلة القواعد الجزء الأول",
+        video: "c89e7773-81c4-4b7d-9025-92eb13d32daa"
+    },
+                // 10-21
+    {
+        title: "Questions Part 2",
+        description:
+            "اسئلة القواعد الجزء الثاني",
+        video: "e46471a9-c1a9-4a1e-b1f1-9cfd28727a18"
+    },
+                // 22-30
+    {
+        title: "Questions Part 3",
+        description:
+            "اسئلة القواعد الجزء الثالث",
+        video: "d112c322-7d76-4cab-88aa-971be452d9b1"
+    },
+                // 31-39
+    {
+        title: "Questions Part 4",
+        description:
+            "اسئلة القواعد الجزء الرابع",
+        video: "5194a15f-ab19-4aaa-a683-de8d609f5da7"
+    },
+                // 40-51
+    {
+        title: "Questions Part 5",
+        description:
+            "اسئلة القواعد الجزء الخامس",
+        video: "615ff973-85d0-436b-810f-fb21144f87e4"
+    },
+                // 52-60
+    {
+        title: "Questions Part 6",
+        description:
+            "اسئلة القواعد الجزء السادس",
+        video: "afeb19ac-75d5-4fd4-bcb7-1d910a7cfaad"
+    },
+                // 61-69
+    {
+        title: "Questions Part 7",
+        description:
+            "اسئلة القواعد الجزء السابع",
+        video: "c0a66166-eb87-4aca-b525-4c58f39b8c2b"
+    },
+                // 70-81
+    {
+        title: "Questions Part 8",
+        description:
+            "اسئلة القواعد الجزء الثامن",
+        video: "e3c4539f-84f8-4858-8ae6-4c4d2365f534"
+    },
+                // 82-90
+
+    {
+        title: "Questions Part 9",
+        description:
+            "اسئلة القواعد الجزء التاسع",
+        video: "3ec0cb1b-b66e-4a51-8b42-39363e748eff"
+    },
+                // 91-102
+
+    {
+        title: "Questions Part 10",
+        description:
+            "اسئلة القواعد الجزء العاشر",
+        video: "eae6bb2a-3731-419a-be64-d2f81c358214"
     }
 
 ];
@@ -293,83 +355,361 @@ const COURSES = [
 const READING_QUESTIONS = [
 
     {
-        number: 1,
-        title: "Reading Question 01",
-        description: "اقرأ القطعة ثم اختر الإجابة الصحيحة.",
+        
+        title: "Giant Panda",
+        description: "الباندا العملاقة",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "5a713e76-7d03-4c1b-9897-101f276a5b27"
     },
 
     {
-        number: 2,
-        title: "Reading Question 02",
-        description: "حدد الفكرة الرئيسية للقطعة.",
+        title: "Firefighter Mike",
+        description: "مايك الاطفائي",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "aff448f4-0f10-4400-8cb0-595bf9bcc50f"
     },
 
     {
-        number: 3,
-        title: "Reading Question 03",
-        description: "ابحث عن المعلومة المطلوبة داخل النص.",
+        title: "Bees",
+        description: "النحل",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "da38fbbf-d9fc-4b66-9450-a4adc6b4be1b"
     },
 
     {
-        number: 4,
-        title: "Reading Question 04",
-        description: "اختر الإجابة التي يدعمها النص.",
+        title: "Stars",
+        description: "النجوم",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "fb321f18-fe23-440c-9693-e5b64f5a1414"
     },
 
     {
-        number: 5,
-        title: "Reading Question 05",
-        description: "حدد معنى الكلمة من سياق النص.",
+        title: "Adam & Eric",
+        description: "آدم و ايرك",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "23711eff-9ce2-47f1-9110-5b499ad31760"
     },
 
     {
-        number: 6,
-        title: "Reading Question 06",
-        description: "حدد المعلومة الصحيحة حسب القطعة.",
+        title: "Strange substance",
+        description: "المادةالغريبة",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "93dd0b6e-0c8e-49f8-b463-3b6a20d057f7"
     },
 
     {
-        number: 7,
-        title: "Reading Question 07",
-        description: "ابحث عن التفاصيل المهمة في النص.",
+        title: "Ahmad",
+        description: "أحمد",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "22fc43ea-15fa-4a08-a6e6-a3a1926ac28d"
     },
 
     {
-        number: 8,
-        title: "Reading Question 08",
-        description: "حدد الاستنتاج الصحيح من القطعة.",
+        title: "Ibn sina",
+        description: "ابن سينا",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "0e9fcf26-24ff-4b8d-8063-ba0a0565edb6"
     },
 
     {
-        number: 9,
-        title: "Reading Question 09",
-        description: "اختر الإجابة الأقرب لما ورد في النص.",
+        title: "Dopamine",
+        description: "الدوبامين",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "e08fb752-8803-42da-b6cc-116d9cd22bba"
     },
 
     {
-        number: 10,
-        title: "Reading Question 10",
-        description: "اختر الإجابة الصحيحة بناءً على القطعة.",
+        title: "Mohammed Ali",
+        description: "محمد علي",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "c28e7e88-2514-49a1-b35d-a38ee626b1a6"
+    },
+
+    {
+        title: "Kingdom's Climate",
+        description: "مناخ المملكة",
+        video:
+            "7e784b86-45de-432e-8ed1-617d1a3aeb23"
+    },
+
+    {
+        title: "The Korean Mother",
+        description: "الأم الكورية",
+        video:
+            "c6c2c206-c3f1-43bd-a600-a2411ce7bd01"
+    },
+
+    {
+        title: "Cupping",
+        description: "الحجامة",
+        video:
+            "f7150b9d-526e-41cb-9e73-c67153b102e4"
+    },
+
+    {
+        title: "Cancer",
+        description: "السرطان",
+        video:
+            "0052ce9f-4f48-4153-adcd-45a0c30804fe"
+    },
+
+    {
+        title: "Madagascar",
+        description: "مدغشقر",
+        video:
+            "b35f8dc6-fa9f-46eb-9516-a1a3f3e30628"
+    },
+
+    {
+        title: "Singapore",
+        description: "سنغافورة",
+        video:
+            "3c7a06e0-5aa6-42d6-8440-20a79543f691"
+    },
+
+    {
+        title: "Tourism in Jamaica",
+        description: "السياحة في جامايكا",
+        video:
+            "738a4734-61a0-4db5-95eb-d64def814840"
+    },
+
+    {
+        title: "Papyrus",
+        description: "الورق البردي",
+        video:
+            "ac17bdf8-055b-47c7-9938-2f02716fbf75"
+    },
+
+    {
+        title: "Air pollution",
+        description: "تلوث الهواء",
+        video:
+            "e028935e-cfcb-427d-8c0e-1144eb34452b"
+    },
+
+    {
+        title: "Detroit",
+        description: "ديترويت",
+        video:
+            "1f8dd6e9-cb63-4a7e-851c-581c2dc0dd1d"
+    },
+
+    {
+        title: "Aggression in Children",
+        description: "عدوانية الأطفال",
+        video:
+            "7c25eb74-9f58-4842-aef6-6831d8679693"
+    },
+
+    {
+        title: "Coffee Consumption",
+        description: "رسم بياني عن القهوة",
+        video:
+            "9c2a7c53-3d4a-45dd-aa28-c7f601ca8a16"
+    },
+
+    {
+        title: "Transportation",
+        description: "رسم بياني عن المواصلات",
+        video:
+            "772c4343-d48a-42ee-a0f7-2fc7f94e0fcc"
+    },
+
+    {
+        title: "Strawberry",
+        description: "الفراولة",
+        video:
+            "82ccad83-303b-4fc0-8946-41933d165fb2"
+    },
+
+    {
+        title: "Stress",
+        description: "التوتر",
+        video:
+            "dfca77a4-70ed-4aaa-a2db-d81e56d248f2"
+    },
+
+    {
+        title: "Pizza",
+        description: "البيتزا",
+        video:
+            "e6200c3c-99af-4776-b69c-858eac420bd6"
+    },
+
+    {
+        title: "Tuna and salmon",
+        description: "التونة والسلمون",
+        video:
+            "f5892ea0-0b3a-4172-accb-c2bd6ea75968"
+    },
+
+    {
+        title: "Russian Doll",
+        description: "الدمية الروسية",
+        video:
+            "714bc37b-2dc7-4809-a0f2-8c9cd0464a95"
+    },
+
+    {
+        title: "Emotions",
+        description: "المشاعر",
+        video:
+            "d083e02d-325a-49a5-846a-4d373d9037bd"
+    },
+
+    {
+        title: "The Spanish Flu",
+        description: "الانفلونزا الاسبانية",
+        video:
+            "d66f2999-4a69-4a5f-b5b8-7cdfbca36314"
+    },
+
+    {
+        title: "Inflation",
+        description: "التضخم",
+        video:
+            "5ae93f9f-0d08-45af-8a01-033bc71cdd7d"
+    },
+
+    {
+        title: "Vitamins & Minerals",
+        description: "الفيتامينات والمعادن",
+        video:
+            "b9f045ce-6ca8-45f7-b15e-a930444c6332"
+    },
+
+    {
+        title: "Mada'inSaleh",
+        description: "مدائن صالح",
+        video:
+            "4b6b27bc-55ab-493a-a9f3-ce827ba68aaf"
+    },
+
+    {
+        title: "Intellectual property",
+        description: "الملكية الفكرية",
+        video:
+            "f34068a2-6d8b-4eac-8173-52623931e40e"
+    },
+
+    {
+        title: "Yellowstone Park",
+        description: "منتزه يلو ستون",
+        video:
+            "caa61faf-7fb5-41a8-8a8d-d585447ae182"
+    },
+
+    {
+        title: "Plastic",
+        description: "البلاستيك",
+        video:
+            "e3e1e927-c2e1-4f37-9cd2-f15cc37e3656"
+    },
+
+    {
+        title: "Engineering Innovation",
+        description: "الابتكار الهندسي",
+        video:
+            "1b3bb9b3-9081-4a57-8be9-fa00042208a5"
+    },
+
+    {
+        title: "Food & Cells",
+        description: "الغذاء والخلايا",
+        video:
+            "7f7fdbbe-8ddc-48b9-b4e6-fcf34ca2f37a"
+    },
+
+    {
+        title: "Social Media",
+        description: "التواصل الاجتماعي",
+        video:
+            "f2ff591f-4347-45cc-837f-2f5b187ac0d0"
+    },
+
+    {
+        title: "Advertising",
+        description: "الاعلان",
+        video:
+            "90b9b119-2007-47e7-9e7e-ed8c19b5780c"
+    },
+
+    {
+        title: "Volcano",
+        description: "البركان",
+        video:
+            ""
+    },
+
+    {
+        title: "Ants",
+        description: "النمل",
+        video:
+            "14fd8258-1cff-4d3a-a4a7-3a6a001db704"
+    },
+
+    {
+        title: "Statistics",
+        description: "الإحصاء",
+        video:
+            "8e192bc0-72a8-413c-a9fa-a882b5bd7daf"
+    },
+
+    {
+        title: "Motor Development",
+        description: "التطور الحركي",
+        video:
+            "35d5038d-61d2-45bd-b366-47d6c77b19bd"
+    },
+
+    {
+        title: "Copyright",
+        description: "حقوق النشر",
+        video:
+            "8c796620-6ea2-48bc-89be-859dfa69b88f"
+    },
+
+    {
+        title: "Taste & Smell",
+        description: "التذوق والشم",
+        video:
+            "4ae73c92-bc06-49dd-8252-1ce6358c6ae8"
+    },
+
+    {
+        title: "Software Ownership",
+        description: "ملكية البرمجيات",
+        video:
+            "eba5eb21-41f6-40b5-bdf2-197503e708c7"
+    },
+
+    {
+        title: "Petroleum",
+        description: "النفط",
+        video:
+            "14e1b9f3-05de-4d04-b9f9-4d5ad1526675"
+    },
+
+    {
+        title: "Blood types",
+        description: "فصائل الدم",
+        video:
+            "643dd1c1-8dbe-49f5-803c-d2bcfc46c85c"
+    },
+
+    {
+        title: "The Cold War",
+        description: "الحرب الباردة",
+        video:
+            "70655302-3d9b-4d12-8168-b5f41105f483"
+    },
+
+    {
+        title: "Synonyms",
+        description: "المرادفات",
+        video:
+            "502aa9dd-42dc-4d17-820a-0c996a7a9e83"
     }
 
 ];
@@ -382,86 +722,123 @@ const READING_QUESTIONS = [
 const LISTENING_QUESTIONS = [
 
     {
-        number: 1,
-        title: "Listening Question 01",
-        description: "استمع إلى المقطع ثم اختر الإجابة الصحيحة.",
+        title: "Guidelines & Tips",
+        description: "تعليمات ونصائح القسم",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "15cbcf4f-622e-4a96-bbfc-6d14f30cd977"
     },
 
     {
-        number: 2,
-        title: "Listening Question 02",
-        description: "استمع جيدًا وحدد المعلومة المطلوبة.",
+        title: "Listening 1",
+        description: "المقطع الصوتي الأول",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "9fe55146-7999-4a89-9c12-6b263722c215"
     },
 
     {
-        number: 3,
-        title: "Listening Question 03",
-        description: "حدد الفكرة الرئيسية للمقطع.",
+        title: "Listening 2",
+        description: "المقطع الصوتي الثاني",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "bfb56646-fdae-4f36-8e66-0b8cbee110f9"
     },
 
     {
-        number: 4,
-        title: "Listening Question 04",
-        description: "استمع إلى التفاصيل واختر الإجابة الصحيحة.",
+        title: "Listening 3",
+        description: "المقطع الصوتي الثالث",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "1dc58d31-2b82-40bd-b7d9-f6113b407c68"
     },
 
     {
-        number: 5,
-        title: "Listening Question 05",
-        description: "حدد ما يقوله المتحدث في المقطع.",
+        title: "Listening 4",
+        description: "المقطع الصوتي الرابع",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "c18b1101-c2da-4f0b-914c-06678ccc4e5f"
     },
 
     {
-        number: 6,
-        title: "Listening Question 06",
-        description: "استمع وحدد المعلومة الصحيحة.",
+        title: "Listening 5",
+        description: "المقطع الصوتي الخامس",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "99b7cd0f-4d78-4f9b-b511-0c26be4d8a2e"
     },
 
     {
-        number: 7,
-        title: "Listening Question 07",
-        description: "ركز على الكلمات والمعلومات المهمة.",
+        title: "Listening 6",
+        description: "المقطع الصوتي السادس",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "1336e253-3dd5-47f6-9476-8819bc74baf2"
     },
 
     {
-        number: 8,
-        title: "Listening Question 08",
-        description: "حدد الاستنتاج الصحيح بعد الاستماع.",
+        title: "Listening 7",
+        description: "المقطع الصوتي السابع",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "8b88dcc6-0443-4603-99e1-d255f4891110"
     },
 
     {
-        number: 9,
-        title: "Listening Question 09",
-        description: "اختر الإجابة التي تتوافق مع المقطع.",
+        title: "Listening 8",
+        description: "المقطع الصوتي الثامن",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "7fc2b6f7-a7ed-4f70-9ba6-a11c292dd915"
     },
 
     {
-        number: 10,
-        title: "Listening Question 10",
-        description: "استمع جيدًا ثم اختر الإجابة الصحيحة.",
+        title: "Listening 9",
+        description: "المقطع الصوتي التاسع",
         video:
-            "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+            "7bd018e1-05b6-4869-b830-b19a8d664ab0"
+    },
+
+    {
+        title: "Listening 10",
+        description: "المقطع الصوتي العاشر",
+        video:
+            "f9f4cfca-1e87-446d-94ad-2ac20d0bf06c"
     }
 
 ];
+
+// ============================================================
+// FINAL SECTION QUIZZES
+// ============================================================
+
+const FINAL_QUIZZES = {
+
+    vocabulary: {
+        enabled: true,
+        title: "Vocabulary Final Quiz",
+        description: "اختبار نهاية قسم المفردات",
+        url: "https://example.com/vocabulary-quiz",
+        buttonText: "اختبار المفردات"
+    },
+
+    grammar: {
+        enabled: true,
+        title: "Grammar Final Quiz",
+        description: "اختبار نهاية قسم القواعد",
+        url: "https://example.com/grammar-quiz",
+        buttonText: "اختبار القواعد"
+    },
+
+    reading: {
+        enabled: true,
+        title: "Reading Final Quiz",
+        description: "اختبار نهاية قسم القراءة",
+        url: "https://example.com/reading-quiz",
+        buttonText: "اختبار القراءة"
+    },
+
+    listening: {
+        enabled: true,
+        title: "Listening Practice",
+        description: "صفحة تدريبات الاستماع",
+        url: "https://example.com/listening-quiz",
+        buttonText: "اختبار الاستماع"
+    }
+
+};
 
 
 // ============================================================
@@ -702,6 +1079,67 @@ function renderCoursesForSection(lessons, containerId) {
 
     });
 
+    // ========================================================
+// FINAL VOCABULARY QUIZ
+// ============================================================
+
+const finalQuiz =
+    FINAL_QUIZZES.vocabulary;
+
+if (
+    finalQuiz &&
+    finalQuiz.enabled
+) {
+
+    const finalCard =
+        document.createElement("article");
+
+    finalCard.className =
+        "course-card final-quiz-card";
+
+    finalCard.innerHTML = `
+
+        <div class="course-number">
+    ✓
+</div>
+
+        <h4>
+            ${finalQuiz.title}
+        </h4>
+
+        <p>
+            ${finalQuiz.description}
+        </p>
+
+        <button
+            class="course-btn final-quiz-btn"
+            type="button"
+        >
+            ${finalQuiz.buttonText}
+        </button>
+
+    `;
+
+    container.appendChild(finalCard);
+
+
+    finalCard
+        .querySelector(".final-quiz-btn")
+        .addEventListener(
+            "click",
+            () => {
+
+                window.open(
+                    finalQuiz.url,
+                    "_blank",
+                    "noopener,noreferrer"
+                );
+
+            }
+        );
+
+}
+
 }
 
 
@@ -737,7 +1175,7 @@ function renderQuestionSection(
         card.innerHTML = `
 
             <div class="course-number">
-                ${String(question.number).padStart(2, "0")}
+                ${String(index + 1).padStart(2, "0")}
             </div>
 
             <h4>
@@ -752,7 +1190,7 @@ function renderQuestionSection(
                 class="course-btn question-btn"
                 data-question-index="${index}"
             >
-                مشاهدة السؤال
+                مشاهدة الدرس
             </button>
 
         `;
@@ -761,10 +1199,12 @@ function renderQuestionSection(
 
     });
 
+
     const questionButtons =
         container.querySelectorAll(
             ".question-btn"
         );
+
 
     questionButtons.forEach((button) => {
 
@@ -787,6 +1227,72 @@ function renderQuestionSection(
         );
 
     });
+
+
+    // ========================================================
+    // FINAL QUIZ CARD
+    // ========================================================
+
+    const finalQuiz =
+        FINAL_QUIZZES[sectionType];
+
+    if (
+        finalQuiz &&
+        finalQuiz.enabled
+    ) {
+
+        const finalCard =
+            document.createElement("article");
+
+        finalCard.className =
+            "course-card final-quiz-card";
+
+        finalCard.innerHTML = `
+
+            <div class="course-number">
+                ✓
+            </div>
+
+            <h4>
+                ${finalQuiz.title}
+            </h4>
+
+            <p>
+                ${finalQuiz.description}
+            </p>
+
+            <button
+                class="course-btn final-quiz-btn"
+                type="button"
+            >
+                ${finalQuiz.buttonText}
+            </button>
+
+        `;
+
+        container.appendChild(finalCard);
+
+
+        const finalQuizButton =
+            finalCard.querySelector(
+                ".final-quiz-btn"
+            );
+
+
+        finalQuizButton.addEventListener(
+            "click",
+            () => {
+
+                window.open(
+                    finalQuiz.url,
+                    "_blank",
+                    "noopener,noreferrer"
+                );
+
+            }
+        );
+
+    }
 
 }
 
@@ -815,10 +1321,7 @@ function openCourse(index) {
 
     courseVideo.pause();
 
-    courseVideo.src =
-    getVideoUrl(course.video);
-
-    courseVideo.load();
+loadVideo(course.video);
 
     videoPlaceholder.classList.remove(
         "hidden"
@@ -875,10 +1378,7 @@ function openVocabularyLesson(
 
     courseVideo.pause();
 
-    courseVideo.src =
-    getVideoUrl(lesson.video);
-
-    courseVideo.load();
+loadVideo(question.video);
 
     videoPlaceholder.classList.remove(
         "hidden"
@@ -938,10 +1438,7 @@ function openQuestion(
 
     courseVideo.pause();
 
-    courseVideo.src =
-    getVideoUrl(question.video);
-
-    courseVideo.load();
+loadVideo(question.video);
 
     videoPlaceholder.classList.remove(
         "hidden"
@@ -1337,13 +1834,40 @@ courseVideo.addEventListener(
 
 
 // ============================================================
-// VIDEO ERROR
+// VIDEO ERROR - 1080p → 720p FALLBACK
 // ============================================================
 
 courseVideo.addEventListener(
     "error",
     () => {
 
+        // If this is a Bunny video
+        if (
+            currentBunnyVideoId &&
+            !tried720p
+        ) {
+
+            console.log(
+                "1080p is not available. Trying 720p..."
+            );
+
+            // Remember that we already tried 720p
+            tried720p = true;
+
+            // Build the 720p URL
+            const url720 =
+                BUNNY_CDN +
+                currentBunnyVideoId +
+                "/play_720p.mp4";
+
+            // Try 720p
+            courseVideo.src = url720;
+            courseVideo.load();
+
+            return;
+        }
+
+        // Both qualities failed
         videoPlaceholder.classList.remove(
             "hidden"
         );
@@ -1806,6 +2330,72 @@ renderQuestionSection(
 renderCoursesForSection(
     VOCABULARY_LESSONS,
     "vocabularyGrid"
+
+    
 );
+<<<<<<< HEAD
+
+// ========================================================
+// FINAL GRAMMAR QUIZ
+// ========================================================
+
+const finalQuiz =
+    FINAL_QUIZZES.grammar;
+
+if (
+    finalQuiz &&
+    finalQuiz.enabled
+) {
+
+    const finalCard =
+        document.createElement("article");
+
+    finalCard.className =
+        "course-card final-quiz-card";
+
+    finalCard.innerHTML = `
+
+        <div class="course-number">
+            ✓
+        </div>
+
+        <h4>
+            ${finalQuiz.title}
+        </h4>
+
+        <p>
+            ${finalQuiz.description}
+        </p>
+
+        <button
+            class="course-btn final-quiz-btn"
+            type="button"
+        >
+            ${finalQuiz.buttonText}
+        </button>
+
+    `;
+
+    courseGrid.appendChild(finalCard);
+
+
+    finalCard
+        .querySelector(".final-quiz-btn")
+        .addEventListener(
+            "click",
+            () => {
+
+                window.open(
+                    finalQuiz.url,
+                    "_blank",
+                    "noopener,noreferrer"
+                );
+
+            }
+        );
+
+}
 
 lucide.createIcons();
+=======
+>>>>>>> aa79a7308a92b878e84bb0b4eb83c1d3cb6566ce
