@@ -1,7 +1,25 @@
 /* =========================================================
    YAZEED ENGLISH — ADMIN DASHBOARD
-   UI ONLY — NO DATABASE CONNECTION YET
+   SUPABASE VERSION
 ========================================================= */
+
+
+/* =========================================================
+   SUPABASE CONFIG
+========================================================= */
+
+const SUPABASE_URL =
+    "https://mldejpjuluiavdhdumqa.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_4CSu5Xqo99OK5o4EJom_Pg_tvelza_h";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
 
 
 /* =========================================================
@@ -46,7 +64,7 @@ const emptyState =
    ORDERS
 ========================================================= */
 
-let orders = {};    
+let orders = {};
 
 
 /* =========================================================
@@ -54,6 +72,242 @@ let orders = {};
 ========================================================= */
 
 let editingOrderNumber = null;
+
+
+/* =========================================================
+   AUTHENTICATION
+========================================================= */
+
+async function checkAdminLogin() {
+
+    const {
+        data: {
+            session
+        }
+    } = await supabaseClient.auth.getSession();
+
+
+    if (!session) {
+
+        showLoginScreen();
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+/* =========================================================
+   LOGIN SCREEN
+========================================================= */
+
+function showLoginScreen() {
+
+    document.body.innerHTML = `
+
+        <main style="
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+        ">
+
+            <div style="
+                width:100%;
+                max-width:420px;
+                background:white;
+                padding:32px;
+                border-radius:20px;
+                box-shadow:0 10px 40px rgba(0,0,0,0.08);
+            ">
+
+                <h1 style="
+                    margin-top:0;
+                    text-align:center;
+                ">
+                    Yazeed English
+                </h1>
+
+                <h2 style="
+                    text-align:center;
+                    margin-bottom:10px;
+                ">
+                    تسجيل دخول الإدارة
+                </h2>
+
+                <p style="
+                    text-align:center;
+                    color:#666;
+                    margin-bottom:25px;
+                ">
+                    هذه الصفحة مخصصة للإدارة فقط.
+                </p>
+
+                <form id="adminLoginForm">
+
+                    <label
+                        for="adminEmail"
+                        style="display:block;margin-bottom:8px;"
+                    >
+                        البريد الإلكتروني
+                    </label>
+
+                    <input
+                        id="adminEmail"
+                        type="email"
+                        required
+                        autocomplete="email"
+                        style="
+                            width:100%;
+                            box-sizing:border-box;
+                            padding:12px;
+                            margin-bottom:16px;
+                            border:1px solid #ddd;
+                            border-radius:10px;
+                            font-size:16px;
+                        "
+                    >
+
+                    <label
+                        for="adminPassword"
+                        style="display:block;margin-bottom:8px;"
+                    >
+                        كلمة المرور
+                    </label>
+
+                    <input
+                        id="adminPassword"
+                        type="password"
+                        required
+                        autocomplete="current-password"
+                        style="
+                            width:100%;
+                            box-sizing:border-box;
+                            padding:12px;
+                            margin-bottom:16px;
+                            border:1px solid #ddd;
+                            border-radius:10px;
+                            font-size:16px;
+                        "
+                    >
+
+                    <button
+                        type="submit"
+                        style="
+                            width:100%;
+                            padding:13px;
+                            border:0;
+                            border-radius:10px;
+                            background:#2563eb;
+                            color:white;
+                            font-size:16px;
+                            cursor:pointer;
+                        "
+                    >
+                        تسجيل الدخول
+                    </button>
+
+                    <p
+                        id="loginMessage"
+                        style="
+                            text-align:center;
+                            color:#dc2626;
+                            margin-top:15px;
+                        "
+                    ></p>
+
+                </form>
+
+            </div>
+
+        </main>
+
+    `;
+
+
+    document
+        .getElementById("adminLoginForm")
+        .addEventListener(
+            "submit",
+            handleLogin
+        );
+
+}
+
+
+/* =========================================================
+   HANDLE LOGIN
+========================================================= */
+
+async function handleLogin(event) {
+
+    event.preventDefault();
+
+
+    const email =
+        document
+            .getElementById("adminEmail")
+            .value
+            .trim();
+
+
+    const password =
+        document
+            .getElementById("adminPassword")
+            .value;
+
+
+    const message =
+        document
+            .getElementById("loginMessage");
+
+
+    message.textContent =
+        "جارٍ تسجيل الدخول...";
+
+
+    const {
+        error
+    } =
+        await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+        });
+
+
+    if (error) {
+
+        console.error(error);
+
+        message.textContent =
+            "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+
+        return;
+
+    }
+
+
+    window.location.reload();
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+async function logout() {
+
+    await supabaseClient.auth.signOut();
+
+    window.location.reload();
+
+}
 
 
 /* =========================================================
@@ -73,6 +327,10 @@ openCreateBtn.addEventListener(
             "إنشاء الطلب";
 
         clearModal();
+
+        document
+            .getElementById("modalOrderNumber")
+            .disabled = false;
 
         modalOverlay.style.display =
             "flex";
@@ -140,7 +398,7 @@ function clearModal() {
 
 saveOrderBtn.addEventListener(
     "click",
-    function () {
+    async function () {
 
         const orderNumber =
             document
@@ -200,37 +458,56 @@ saveOrderBtn.addEventListener(
         }
 
 
+        saveOrderBtn.disabled = true;
+
+
         /* =====================================
            CREATE
         ====================================== */
 
         if (!editingOrderNumber) {
 
-            if (orders[orderNumber]) {
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from("orders")
+                    .insert({
+
+                        order_number:
+                            orderNumber,
+
+                        step:
+                            step,
+
+                        english:
+                            english,
+
+                        trab6:
+                            trab6,
+
+                        writing:
+                            writing,
+
+                        active:
+                            true
+
+                    });
+
+
+            if (error) {
+
+                console.error(error);
 
                 alert(
-                    "رقم الطلب موجود بالفعل."
+                    "حدث خطأ أثناء إنشاء الطلب."
                 );
+
+                saveOrderBtn.disabled = false;
 
                 return;
 
             }
-
-
-            orders[orderNumber] = {
-
-                step: step,
-
-                english: english,
-
-                trab6: trab6,
-
-                writing: writing,
-
-                active: true
-
-            };
-
 
         }
 
@@ -241,24 +518,54 @@ saveOrderBtn.addEventListener(
 
         else {
 
-            orders[editingOrderNumber].step =
-                step;
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from("orders")
+                    .update({
 
-            orders[editingOrderNumber].english =
-                english;
+                        step:
+                            step,
 
-            orders[editingOrderNumber].trab6 =
-                trab6;
+                        english:
+                            english,
 
-            orders[editingOrderNumber].writing =
-                writing;
+                        trab6:
+                            trab6,
+
+                        writing:
+                            writing
+
+                    })
+                    .eq(
+                        "order_number",
+                        editingOrderNumber
+                    );
+
+
+            if (error) {
+
+                console.error(error);
+
+                alert(
+                    "حدث خطأ أثناء تعديل الطلب."
+                );
+
+                saveOrderBtn.disabled = false;
+
+                return;
+
+            }
 
         }
 
 
+        saveOrderBtn.disabled = false;
+
         closeModal();
 
-        renderDashboard();
+        await loadOrders();
 
     }
 );
@@ -332,7 +639,7 @@ function editOrder(orderNumber) {
 
 
 /* =========================================================
-   RESET ORDER NUMBER FIELD
+   MODAL BACKDROP
 ========================================================= */
 
 modalOverlay.addEventListener(
@@ -356,7 +663,7 @@ modalOverlay.addEventListener(
    TOGGLE ORDER STATUS
 ========================================================= */
 
-function toggleOrder(orderNumber) {
+async function toggleOrder(orderNumber) {
 
     const order =
         orders[orderNumber];
@@ -366,11 +673,39 @@ function toggleOrder(orderNumber) {
     }
 
 
-    order.active =
+    const newStatus =
         !order.active;
 
 
-    renderDashboard();
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("orders")
+            .update({
+                active:
+                    newStatus
+            })
+            .eq(
+                "order_number",
+                orderNumber
+            );
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "حدث خطأ أثناء تغيير حالة الطلب."
+        );
+
+        return;
+
+    }
+
+
+    await loadOrders();
 
 }
 
@@ -379,7 +714,7 @@ function toggleOrder(orderNumber) {
    DELETE ORDER
 ========================================================= */
 
-function deleteOrder(orderNumber) {
+async function deleteOrder(orderNumber) {
 
     const confirmed =
         confirm(
@@ -392,10 +727,32 @@ function deleteOrder(orderNumber) {
     }
 
 
-    delete orders[orderNumber];
+    const {
+        error
+    } =
+        await supabaseClient
+            .from("orders")
+            .delete()
+            .eq(
+                "order_number",
+                orderNumber
+            );
 
 
-    renderDashboard();
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "حدث خطأ أثناء حذف الطلب."
+        );
+
+        return;
+
+    }
+
+
+    await loadOrders();
 
 }
 
@@ -708,74 +1065,76 @@ statusFilter.addEventListener(
 
 
 /* =========================================================
-   LOAD ORDERS FROM ORDERS.JSON
+   LOAD ORDERS FROM SUPABASE
 ========================================================= */
 
 async function loadOrders() {
 
-    try {
-
-        const response =
-            await fetch(
-                "/orders.json?time=" +
-                Date.now()
-            );
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Could not load orders.json"
-            );
-
-        }
-
-        const data =
-            await response.json();
-
-
-        orders =
-            data.orders || {};
-
-
-        /* -----------------------------------------
-           Make sure every order has an active status
-        ----------------------------------------- */
-
-        Object.values(orders)
-            .forEach(
-                function (order) {
-
-                    if (
-                        typeof order.active !==
-                        "boolean"
-                    ) {
-
-                        order.active = true;
-
-                    }
-
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("orders")
+            .select("*")
+            .order(
+                "created_at",
+                {
+                    ascending: false
                 }
             );
 
 
-        renderDashboard();
-
-
-    } catch (error) {
+    if (error) {
 
         console.error(error);
 
         alert(
-            "تعذر تحميل الطلبات."
+            "تعذر تحميل الطلبات من قاعدة البيانات."
         );
 
+        return;
+
     }
+
+
+    orders = {};
+
+
+    data.forEach(
+        function (order) {
+
+            orders[
+                order.order_number
+            ] = order;
+
+        }
+    );
+
+
+    renderDashboard();
 
 }
 
 
 /* =========================================================
-   INITIAL LOAD
+   INITIALIZATION
 ========================================================= */
 
-loadOrders();
+async function initializeAdmin() {
+
+    const loggedIn =
+        await checkAdminLogin();
+
+
+    if (!loggedIn) {
+        return;
+    }
+
+
+    await loadOrders();
+
+}
+
+
+initializeAdmin();
