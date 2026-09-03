@@ -1,34 +1,40 @@
 /* =========================================================
-   YAZEED ENGLISH — SIMPLE COURSE ACCESS CHECK
+   YAZEED ENGLISH — COURSE ACCESS CHECK
+   SUPABASE VERSION
 ========================================================= */
+
+const SUPABASE_URL =
+    "https://mldejpjuluiavdhdumqa.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_4CSu5Xqo99OK5o4EJom_Pg_tvelza_h";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
 
 async function checkCourseAccess(courseKey) {
 
-    /* -----------------------------------------
-       GET SAVED ORDER
-    ----------------------------------------- */
-
     const savedAccess =
-        localStorage.getItem(
-            "yazeed_current_access"
-        );
+        localStorage.getItem("yazeed_current_access");
 
+    /*
+       No saved access
+    */
     if (!savedAccess) {
-        window.location.href =
-            "/activate.html";
+        window.location.href = "/activate.html";
         return false;
     }
 
-    /* -----------------------------------------
-       READ SAVED DATA
-    ----------------------------------------- */
 
     let access;
 
     try {
 
-        access =
-            JSON.parse(savedAccess);
+        access = JSON.parse(savedAccess);
 
     } catch (error) {
 
@@ -47,37 +53,64 @@ async function checkCourseAccess(courseKey) {
         return false;
     }
 
-    /* -----------------------------------------
-       GET THE LATEST ORDERS.JSON
-    ----------------------------------------- */
+
+    /*
+       Get order number
+    */
+    const orderNumber =
+        access.orderNumber;
+
+
+    if (!orderNumber) {
+
+        localStorage.removeItem(
+            "yazeed_current_access"
+        );
+
+        window.location.href =
+            "/activate.html";
+
+        return false;
+    }
+
 
     try {
 
-        const response =
-            await fetch(
-                "/orders.json?time=" +
-                Date.now()
+        /*
+           Securely check this specific order
+           through Supabase RPC.
+        */
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.rpc(
+                "get_order_access",
+                {
+                    p_order_number:
+                        orderNumber
+                }
             );
 
-        if (!response.ok) {
-            throw new Error(
-                "Could not load orders.json"
+
+        if (error) {
+
+            console.error(
+                "Supabase error:",
+                error
             );
+
+            throw error;
         }
 
-        const data =
-            await response.json();
 
-        /* -----------------------------------------
-           FIND CUSTOMER ORDER
-        ----------------------------------------- */
-
-        const order =
-            data.orders[
-                access.orderNumber
-            ];
-
-        if (!order) {
+        /*
+           Order does not exist
+        */
+        if (
+            !data ||
+            data.length === 0
+        ) {
 
             localStorage.removeItem(
                 "yazeed_current_access"
@@ -89,20 +122,49 @@ async function checkCourseAccess(courseKey) {
             return false;
         }
 
-        /* -----------------------------------------
-           CHECK CURRENT PRODUCT
-        ----------------------------------------- */
 
+        const order =
+            data[0];
+
+
+        /*
+           Entire order deactivated
+        */
+        if (
+            order.active !== true
+        ) {
+
+            localStorage.removeItem(
+                "yazeed_current_access"
+            );
+
+            alert(
+                "هذا الطلب غير نشط حاليًا. يرجى التواصل معنا."
+            );
+
+            window.location.href =
+                "/activate.html";
+
+            return false;
+        }
+
+
+        /*
+           Check the specific course
+        */
         if (
             order[courseKey] !== true
         ) {
 
             alert(
-                "ليس لديك وصول إلى هذه الصفحة"
+                "ليس لديك وصول إلى هذه الدورة."
             );
 
-            /* Update saved permissions */
+            /*
+               Update saved permissions
+            */
             access.products = {
+
                 step:
                     order.step === true,
 
@@ -116,10 +178,12 @@ async function checkCourseAccess(courseKey) {
                     order.writing === true
             };
 
+
             localStorage.setItem(
                 "yazeed_current_access",
                 JSON.stringify(access)
             );
+
 
             window.location.href =
                 "/";
@@ -127,12 +191,13 @@ async function checkCourseAccess(courseKey) {
             return false;
         }
 
-        /* -----------------------------------------
-           UPDATE LOCALSTORAGE
-           WITH LATEST PERMISSIONS
-        ----------------------------------------- */
 
+        /*
+           Update local permissions
+           in case admin changed anything.
+        */
         access.products = {
+
             step:
                 order.step === true,
 
@@ -146,20 +211,25 @@ async function checkCourseAccess(courseKey) {
                 order.writing === true
         };
 
+
         localStorage.setItem(
             "yazeed_current_access",
             JSON.stringify(access)
         );
 
-        /* -----------------------------------------
-           ACCESS APPROVED
-        ----------------------------------------- */
 
+        /*
+           Access confirmed
+        */
         return true;
+
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Access verification failed:",
+            error
+        );
 
         alert(
             "تعذر التحقق من صلاحية الوصول. يرجى المحاولة مرة أخرى."
